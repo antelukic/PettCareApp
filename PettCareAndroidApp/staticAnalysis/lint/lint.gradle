@@ -1,0 +1,12 @@
+android {
+    lintOptions {
+        lintConfig(file("$project.rootDir/staticAnalysis/lint/rules-lint.xml"))
+        htmlOutput(file("$project.buildDir/outputs/lint/lint.html"))
+
+        warningsAsErrors = true
+        xmlReport = false
+        htmlReport = true
+        abortOnError = true
+        checkTestSources = true
+    }
+}

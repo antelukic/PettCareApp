@@ -1,0 +1,28 @@
+configurations {
+    detekt
+}
+
+task detekt(type: JavaExec) {
+    group = "verification"
+    description = "Run Detekt"
+
+    main = "io.gitlab.arturbosch.detekt.cli.Main"
+    classpath = configurations.detekt
+    def input = "$projectDir/src"
+    def config = "$rootDir/staticAnalysis/detekt/detekt.yml"
+    def excludes = ".*/resources/.*,.*/tmp/.*,.*/build/.*"
+    def outputFolder = "$buildDir/outputs/reports/staticAnalysis"
+    def outputName = "detekt-report"
+    def params = ['-i', input,
+                  '-c', config,
+                  '-ex', excludes,
+                  '-r', "html:$outputFolder/${outputName}.html",
+                  '--build-upon-default-config'] // Use defaults, override them in detekt.yml if needed
+    args(params)
+}
+
+dependencies {
+    detekt "io.gitlab.arturbosch.detekt:detekt-cli:1.23.5"
+    detekt "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.5"
+    detekt "com.twitter.compose.rules:detekt:0.0.26"
+}
