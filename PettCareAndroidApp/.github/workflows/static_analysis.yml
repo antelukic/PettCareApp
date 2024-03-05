@@ -1,8 +1,0 @@
-name: Static Analysis
-on: pull_request
-jobs:
-  staticAnalysis:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: ./gradlew staticAnalysis
