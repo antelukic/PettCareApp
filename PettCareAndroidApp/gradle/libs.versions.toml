@@ -9,13 +9,14 @@ ktlint = "0.49.1"
 lifecycle-runtime-ktx = "2.7.0"
 activity-compose = "1.8.2"
 compose-bom = "2024.02.01"
-koin-compose = "3.4.2"
+koin = "3.5.3"
 timber = "5.0.1"
 ktor-version = "2.3.8"
 ktor-serialization = "2.3.8"
 immutable-collections = "0.3.7"
 coroutines-core = "1.8.0"
 coil = "2.6.0"
+lifecycle-compose = "2.7.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -33,7 +34,8 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
-koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin-compose" }
+koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin"}
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable-collections" }
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-version" }
@@ -44,6 +46,7 @@ ktor-content-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines-core" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 kotlinx-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-maven-serialization", version.ref = "kotlin" }
+lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle-compose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

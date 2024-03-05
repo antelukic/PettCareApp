@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Pett Care</string>
+    <string name="welcome_screen_message">Welcome to PettCare</string>
+    <string name="welcome_sign_in_message">Sign in</string>
+    <string name="welcome_log_in_message">Log in</string>
 </resources>
