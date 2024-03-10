@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: run Lint
-        run: cd PettCareAndroidApp ./gradlew lintDebug
+        run: cd PettCareAndroidApp && ./gradlew lintDebug
         
   detekt:
     runs-on: ubuntu-latest
