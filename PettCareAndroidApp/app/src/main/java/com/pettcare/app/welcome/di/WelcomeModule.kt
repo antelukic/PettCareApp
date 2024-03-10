@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val welcomeModule = module {
 
     factory { WelcomeResources(androidContext()) }
-    viewModel { WelcomeViewModel(get()) }
+    viewModel { WelcomeViewModel(get(), get()) }
 }
