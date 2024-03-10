@@ -1,22 +1,19 @@
 package com.pettcare.app.welcome
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pettcare.app.core.BaseViewModel
+import com.pettcare.app.navigation.Router
 import com.pettcare.app.welcome.translations.WelcomeResources
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 internal class WelcomeViewModel(
     private val welcomeResources: WelcomeResources,
-) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(WelcomeScreenUIState())
-    val uiState = _uiState.asStateFlow()
+    router: Router,
+) : BaseViewModel<WelcomeScreenUIState>(router = router, WelcomeScreenUIState()) {
 
     init {
         viewModelScope.launch {
-            _uiState.emit(getUiState())
+            updateUiState(getUiState())
         }
     }
 
@@ -26,7 +23,11 @@ internal class WelcomeViewModel(
         logInText = welcomeResources.logInMessage(),
     )
 
-    fun navigateToLogin() = Unit
+    fun navigateToLogin() = publishNavigationAction {
+        it.loginScreen()
+    }
 
-    fun navigateToSignIn() = Unit
+    fun navigateToSignIn() = publishNavigationAction {
+        it.signInScreen()
+    }
 }
