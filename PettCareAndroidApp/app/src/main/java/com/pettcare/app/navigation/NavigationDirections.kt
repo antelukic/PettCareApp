@@ -3,7 +3,7 @@ package com.pettcare.app.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NamedNavArgument
-import com.pettcare.app.auth.login.LoginScreen
+import com.pettcare.app.auth.login.presentation.LogInScreen
 import com.pettcare.app.auth.signin.SignInScreen
 import com.pettcare.app.welcome.WelcomeScreen
 
@@ -28,7 +28,7 @@ object NavigationDirections {
 
             @Composable
             override fun Screen(modifier: Modifier) {
-                LoginScreen(modifier)
+                LogInScreen(modifier)
             }
         }
     }
