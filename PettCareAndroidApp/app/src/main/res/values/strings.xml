@@ -2,5 +2,12 @@
     <string name="app_name">Pett Care</string>
     <string name="welcome_screen_message">Welcome to PettCare</string>
     <string name="welcome_sign_in_message">Sign in</string>
-    <string name="welcome_log_in_message">Log in</string>
+    <string name="welcome_log_in_message">Log in to your PettCare account</string>
+    <string name="log_in_title">Log in</string>
+    <string name="email_placeholder">example@mail.com</string>
+    <string name="log_in_button_text">Log in</string>
+    <string name="password_placeholder">*******</string>
+    <string name="change_password_visibility_accessibility">Change password visibility</string>
+    <string name="unkown_error_message">Ooops! Something went wrong. No worries, we will resolve this shortly!</string>
+    <string name="network_error_message">Our service seems to be down. Please try again later!</string>
 </resources>

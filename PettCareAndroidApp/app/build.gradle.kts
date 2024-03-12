@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.compose.icons.extended)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
