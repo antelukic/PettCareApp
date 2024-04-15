@@ -3,7 +3,7 @@ package com.pettcare.app.welcome.translations
 import android.content.Context
 import com.pettcare.app.R
 
-internal class WelcomeResources(
+class WelcomeResources(
     private val context: Context,
 ) {
 

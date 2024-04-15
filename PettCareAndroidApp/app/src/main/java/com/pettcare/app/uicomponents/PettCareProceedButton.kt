@@ -1,8 +1,10 @@
 package com.pettcare.app.uicomponents
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,17 +24,24 @@ fun PettCareProceedButton(
     ),
     shape: Shape = MaterialTheme.shapes.medium,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    isLoading: Boolean = false,
 ) {
     Button(
         onClick = onClick,
         colors = colors,
-        enabled = isEnabled,
+        enabled = isEnabled && !isLoading,
         shape = shape,
         modifier = modifier,
     ) {
-        Text(
-            text = text,
-            style = textStyle,
-        )
+        Crossfade(targetState = isLoading, label = "button_crossfade") {
+            if (it) {
+                CircularProgressIndicator()
+            } else {
+                Text(
+                    text = text,
+                    style = textStyle,
+                )
+            }
+        }
     }
 }

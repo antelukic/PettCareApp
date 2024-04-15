@@ -21,28 +21,34 @@ class LoginViewModel(
     }
 
     fun updatePassword(password: String) {
-        updateUiState(uiState.value.copy(password = password))
+        updateUiState { state ->
+            state.copy(password = password)
+        }
     }
 
     fun updateEmail(email: String) {
-        updateUiState(uiState.value.copy(email = email))
+        updateUiState { state ->
+            state.copy(email = email)
+        }
     }
 
     fun signIn() {
         launchInIO {
-            updateUiState(uiState.value.copy(isLoginButtonEnabled = false))
+            updateUiState { state ->
+                state.copy(isLoginButtonEnabled = false)
+            }
             logInUser.request(uiState.value.email, uiState.value.password)
         }
     }
 
     private fun handleLogInResult(data: LoginData) {
-        updateUiState(
-            uiState.value.copy(
+        updateUiState { state ->
+            state.copy(
                 isError = data.errorType != null,
                 errorMessage = data.errorType.errorMessage(),
-            ),
-        )
-        updateUiState(uiState.value.copy(isLoginButtonEnabled = data.errorType != null))
+                isLoginButtonEnabled = data.errorType != null,
+            )
+        }
     }
 
     private fun BaseResponse.Error?.errorMessage() = when (this) {

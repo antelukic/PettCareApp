@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NamedNavArgument
 import com.pettcare.app.auth.login.presentation.LogInScreen
-import com.pettcare.app.auth.signin.SignInScreen
+import com.pettcare.app.auth.signin.presentation.SignInScreen
 import com.pettcare.app.welcome.WelcomeScreen
 
 object NavigationDirections {
@@ -33,10 +33,10 @@ object NavigationDirections {
         }
     }
 
-    object SignIn {
+    object Registration {
         val screen = object : NavigationDestination {
             override val arguments: List<NamedNavArgument> = emptyList()
-            override val destination: String = "signin"
+            override val destination: String = "registration"
 
             @Composable
             override fun Screen(modifier: Modifier) {

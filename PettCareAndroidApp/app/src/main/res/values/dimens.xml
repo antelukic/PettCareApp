@@ -3,4 +3,5 @@
     <dimen name="spacing_1">4dp</dimen>
     <dimen name="spacing_4">16dp</dimen>
     <dimen name="spacing_5">20dp</dimen>
+    <dimen name="registration_photo_size">200dp</dimen>
 </resources>

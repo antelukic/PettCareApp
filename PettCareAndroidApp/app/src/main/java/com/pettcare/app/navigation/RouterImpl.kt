@@ -13,7 +13,7 @@ internal class RouterImpl(
     }
 
     override fun signInScreen() {
-        navigationPublisher.publish(NavigationDirections.SignIn.screen)
+        navigationPublisher.publish(NavigationDirections.Registration.screen)
     }
 
     override fun goBack() {

@@ -32,8 +32,8 @@ fun NavigationComponent(
             NavigationDirections.LogIn.screen.Screen(screenModifier)
         }
 
-        composable(NavigationDirections.SignIn.screen.destination) {
-            NavigationDirections.SignIn.screen.Screen(screenModifier)
+        composable(NavigationDirections.Registration.screen.destination) {
+            NavigationDirections.Registration.screen.Screen(screenModifier)
         }
     }
 }

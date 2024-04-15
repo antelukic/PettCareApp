@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -10,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.pettcare.app"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -69,6 +70,10 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.compose.icons.extended)
+    implementation(libs.coil.compose)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.storage)
+    implementation(libs.immutable.collections)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

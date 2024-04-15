@@ -19,10 +19,10 @@ abstract class BaseViewModel<T>(
     private val _uiState = MutableStateFlow(initialViewState)
     val uiState = _uiState.asStateFlow()
 
-    fun updateUiState(state: T) {
+    fun updateUiState(state: (T) -> T) {
         viewModelScope.launch {
             _uiState.update {
-                state
+                state(it)
             }
         }
     }
