@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.pettcare.app.bottomnav.BottomNavSelectedPublisher
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
@@ -46,6 +47,7 @@ private fun HandleNavigation(
     navController: NavHostController,
     navActions: NavigationObserver = koinInject(),
 ) {
+    navController.PublishCurrentScreen()
     LaunchedEffect(key1 = true) {
         navActions.observe().onEach { navAction ->
             navigationHandler(
@@ -96,5 +98,18 @@ private fun NavHostController.navigate(
                 inclusive = isInclusive
             }
         }
+    }
+}
+
+@Composable
+private fun NavHostController.PublishCurrentScreen() {
+    val navItemPublisher: BottomNavSelectedPublisher = koinInject()
+
+    LaunchedEffect(key1 = true) {
+        currentBackStackEntryFlow.onEach { navBackStackEntry ->
+            navBackStackEntry.destination.route?.let { route ->
+                navItemPublisher.publishCurrentVisibleRoute(route)
+            }
+        }.launchIn(this)
     }
 }

@@ -36,4 +36,10 @@
     <string name="home_screen_btn_toggle_list">List</string>
     <string name="home_title">Explore</string>
     <string name="price">Price: %s€</string>
+    <string name="bottom_nav_icon">Bottom navigation icon</string>
+    <string name="home_label_bottom_nav">Home</string>
+    <string name="chats_label_bottom_nav">Messages</string>
+    <string name="create_label_bottom_nav">Create</string>
+    <string name="profile_label_bottom_nav">Profile</string>
+    <string name="social_wall_label_bottom_nav">Social wall</string>
 </resources>

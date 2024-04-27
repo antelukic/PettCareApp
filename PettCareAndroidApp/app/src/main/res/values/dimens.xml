@@ -9,4 +9,5 @@
     <dimen name="care_post_avatar_size">32dp</dimen>
     <dimen name="care_post_border_stroke_width">2dp</dimen>
     <dimen name="spacing_2">8dp</dimen>
+    <dimen name="bottom_navigation_shadow_elevation">4dp</dimen>
 </resources>

@@ -7,6 +7,7 @@ import com.pettcare.app.auth.login.presentation.di.loginPresentationModule
 import com.pettcare.app.auth.signin.domain.di.signInDomainModule
 import com.pettcare.app.auth.signin.network.di.firebaseModule
 import com.pettcare.app.auth.signin.presentation.di.signInPresentationModule
+import com.pettcare.app.bottomnav.di.bottomNavigationModule
 import com.pettcare.app.home.domain.di.homeDomainModule
 import com.pettcare.app.home.model.di.homeModelModule
 import com.pettcare.app.home.network.di.homeNetworkModule
@@ -37,6 +38,7 @@ class PettCareApp : Application() {
                     homeDomainModule,
                     homeModelModule,
                     homeNetworkModule,
+                    bottomNavigationModule,
                 ),
             )
         }
