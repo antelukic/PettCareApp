@@ -1,8 +1,13 @@
+import java.io.FileReader
+import java.util.Properties
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -37,9 +42,10 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     packaging {
         resources {
@@ -51,6 +57,14 @@ android {
         disable("ObsoleteLintCustomCheck")
     }
 }
+
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
+    ignoreList.add("keyToIgnore")
+    ignoreList.add("sdk.*")
+}
+
 apply(from = "$rootDir/staticAnalysis/staticAnalysis.gradle.kts")
 
 dependencies {
@@ -74,6 +88,12 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.storage)
     implementation(libs.immutable.collections)
+    implementation(libs.play.services.maps)
+    implementation(libs.google.maps.compose)
+    implementation(libs.play.services.location)
+    implementation(libs.maps.utils.compose)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.kotlinx.serialization)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

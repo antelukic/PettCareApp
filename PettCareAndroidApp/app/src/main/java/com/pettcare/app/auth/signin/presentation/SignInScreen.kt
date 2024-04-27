@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -62,13 +63,20 @@ import org.koin.androidx.compose.koinViewModel
 
 private const val PAGES_COUNT = 4
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SignInScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewModel = koinViewModel<SignInViewModel>()
+    val pagerState = rememberPagerState(pageCount = { PAGES_COUNT })
+    val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     SignInScreen(
-        uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
+        pagerState = pagerState,
+        snackbarHostState = snackbarHostState,
+        uiState = uiState,
         callbacks = RegistrationScreenCallbacks(
             onNameChanged = viewModel::onNameChanged,
             onSurnameChanged = viewModel::onSurnameChanged,
@@ -77,20 +85,40 @@ fun SignInScreen(
             onRepeatPasswordChanged = viewModel::onRepeatPasswordChanged,
             onEmailChanged = viewModel::onEmailChanged,
             onTriggerDatePickerVisibility = viewModel::onTriggerDatePickerVisibility,
-            onSubmitClicked = viewModel::onSubmit,
-            onPageUpdate = viewModel::onPageUpdate,
             onAgeSelected = viewModel::onAgeSelected,
             onTriggerGenderPickerVisibility = viewModel::onTriggerGenderVisibility,
             onPhotoPicked = viewModel::onPhotoPicked,
+            onBtnNextClick = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage.inc())
+                    val isLastPage = pagerState.currentPage == pagerState.pageCount.dec()
+                    viewModel.onPageUpdate(isLastPage)
+                    if (isLastPage) viewModel.onSubmit()
+                }
+            },
+            onBtnPreviousClick = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage.dec())
+                }
+                viewModel.onPageUpdate(false)
+            },
         ),
         modifier = modifier,
     )
+
+    LaunchedEffect(key1 = uiState.errorMessage) {
+        if (uiState.errorMessage != null) {
+            snackbarHostState.showSnackbar(uiState.errorMessage)
+        }
+    }
 }
 
-@Suppress("LongMethod", "MagicNumber")
+@Suppress("LongMethod", "MagicNumber", "MultipleEmitters")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SignInScreen(
+    pagerState: PagerState,
+    snackbarHostState: SnackbarHostState,
     uiState: SignInUiState,
     callbacks: RegistrationScreenCallbacks,
     modifier: Modifier = Modifier,
@@ -98,16 +126,6 @@ private fun SignInScreen(
     val componentModifier = Modifier
         .fillMaxWidth()
         .padding(dimensionResource(id = R.dimen.spacing_4))
-
-    val pagerState = rememberPagerState(pageCount = { PAGES_COUNT })
-    val coroutineScope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(key1 = uiState.errorMessage) {
-        if (uiState.errorMessage != null) {
-            snackbarHostState.showSnackbar(uiState.errorMessage)
-        }
-    }
 
     DatePicker(
         datePickerConfirmButtonTxt = uiState.datePickerConfirmButtonTxt,
@@ -177,18 +195,10 @@ private fun SignInScreen(
                 btnNextText = uiState.btnNextText,
                 currentPage = pagerState.currentPage,
                 onBtnPreviousClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(pagerState.currentPage.dec())
-                    }
-                    callbacks.onPageUpdate(false)
+                    callbacks.onBtnPreviousClick
                 },
                 onBtnNextClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(pagerState.currentPage.inc())
-                        val isLastPage = pagerState.currentPage == pagerState.pageCount.dec()
-                        callbacks.onPageUpdate(isLastPage)
-                        if (isLastPage) callbacks.onSubmitClicked()
-                    }
+                    callbacks.onBtnNextClick
                 },
                 isLoading = uiState.isLoading,
                 modifier = Modifier
@@ -477,7 +487,7 @@ private data class RegistrationScreenCallbacks(
     inline val onTriggerDatePickerVisibility: (Boolean) -> Unit,
     inline val onTriggerGenderPickerVisibility: (Boolean) -> Unit,
     inline val onAgeSelected: (Long?) -> Unit,
-    inline val onSubmitClicked: () -> Unit,
-    inline val onPageUpdate: (Boolean) -> Unit,
     inline val onPhotoPicked: (Uri?) -> Unit,
+    inline val onBtnNextClick: () -> Unit,
+    inline val onBtnPreviousClick: () -> Unit,
 )

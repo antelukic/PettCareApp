@@ -1,14 +1,18 @@
+@file:Suppress("ImportOrdering", "ktlint:import-ordering")
+
 package com.pettcare.app.auth.login.data.repository
 
 import android.content.Context
 import android.net.Uri
 import com.pettcare.app.auth.login.domain.model.LoginRequestParams
 import com.pettcare.app.auth.login.domain.repository.AuthenticationRepository
+import com.pettcare.app.auth.signin.data.model.SignInUserParams as DataSignInUserParams
 import com.pettcare.app.auth.signin.data.model.toRepoSignInUserParams
 import com.pettcare.app.auth.signin.domain.model.SignInUserParams
 import com.pettcare.app.auth.signin.network.FirebaseStorage
 import com.pettcare.app.auth.signin.network.Storage
 import com.pettcare.app.core.BaseResponse
+import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -17,8 +21,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import com.pettcare.app.auth.signin.data.model.SignInUserParams as DataSignInUserParams
-import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class AuthenticationRepositoryImpl(
