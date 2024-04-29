@@ -25,7 +25,7 @@ internal class RouterImpl(
     }
 
     override fun socialWall() {
-        // no op
+        navigationPublisher.publish(NavigationDirections.SocialWall.screen)
     }
 
     override fun create() {
@@ -36,7 +36,7 @@ internal class RouterImpl(
         // no op
     }
 
-    override fun profile() {
+    override fun profile(profileId: String?) {
         // no op
     }
 }

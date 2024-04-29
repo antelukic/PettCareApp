@@ -18,5 +18,5 @@ interface Router {
 
     fun messages()
 
-    fun profile()
+    fun profile(profileId: String?)
 }

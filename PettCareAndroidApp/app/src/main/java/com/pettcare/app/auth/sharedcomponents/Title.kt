@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 fun Title(
     title: String,
     modifier: Modifier = Modifier,
-    style: TextStyle = MaterialTheme.typography.headlineMedium,
+    style: TextStyle = MaterialTheme.typography.titleLarge,
     color: Color = MaterialTheme.colorScheme.primary,
     textAlign: TextAlign = TextAlign.Center,
 ) {

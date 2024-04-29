@@ -6,6 +6,7 @@ import androidx.navigation.NamedNavArgument
 import com.pettcare.app.auth.login.presentation.LogInScreen
 import com.pettcare.app.auth.signin.presentation.SignInScreen
 import com.pettcare.app.home.presentation.HomeScreen
+import com.pettcare.app.socialwall.presentation.SocialWallScreen
 import com.pettcare.app.welcome.WelcomeScreen
 
 object NavigationDirections {
@@ -54,6 +55,18 @@ object NavigationDirections {
             @Composable
             override fun Screen(modifier: Modifier) {
                 HomeScreen(modifier)
+            }
+        }
+    }
+
+    object SocialWall {
+        val screen = object : NavigationDestination {
+            override val arguments: List<NamedNavArgument> = emptyList()
+            override val destination: String = "socialWall"
+
+            @Composable
+            override fun Screen(modifier: Modifier) {
+                SocialWallScreen(modifier)
             }
         }
     }
