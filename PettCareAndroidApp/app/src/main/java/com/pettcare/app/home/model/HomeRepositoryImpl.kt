@@ -32,24 +32,22 @@ internal class HomeRepositoryImpl(
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     override fun result(): Flow<BaseResponse<HomeData>> = pagePublisher
         .mapLatest {
-            BaseResponse.Success(carePostProfileApi.response().toDomain())
+            BaseResponse.Success(HomeData(carePostProfileApi.response().toDomainPosts()))
         }.debounce(DEBOUNCE_TIME)
         .loadingOnStart()
         .onStart {
             publishPage(INITIAL_PAGE)
         }
 
-    private fun List<ApiCarePostProfile>.toDomain() = HomeData(
-        profiles = map { apiCarePostProfile ->
-            CarePostProfile(
-                photoUrl = apiCarePostProfile.photoUrl,
-                name = apiCarePostProfile.name,
-                price = apiCarePostProfile.price,
-                description = apiCarePostProfile.description,
-                address = apiCarePostProfile.address,
-                id = apiCarePostProfile.id,
-                location = LatLng(apiCarePostProfile.lat, apiCarePostProfile.lon),
-            )
-        },
-    )
+    private fun List<ApiCarePostProfile>.toDomainPosts() = map { apiCarePostProfile ->
+        CarePostProfile(
+            photoUrl = apiCarePostProfile.photoUrl,
+            name = apiCarePostProfile.name,
+            price = apiCarePostProfile.price,
+            description = apiCarePostProfile.description,
+            address = apiCarePostProfile.address,
+            id = apiCarePostProfile.id,
+            location = LatLng(apiCarePostProfile.lat, apiCarePostProfile.lon),
+        )
+    }
 }

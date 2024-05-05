@@ -1,5 +1,6 @@
 package com.pettcare.app.bottomnav
 
+import com.pettcare.app.extensions.EMPTY
 import com.pettcare.app.navigation.NavigationDirections
 import com.pettcare.app.navigation.Router
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +28,9 @@ internal class BottomNavHandler(
             }
             NavigationDirections.SocialWall.screen.destination -> {
                 bottomNavItemPublisher.tryEmit(BottomNavItem.SOCIAL_WALL)
+            }
+            NavigationDirections.Profile.screen(EMPTY).destination -> {
+                bottomNavItemPublisher.tryEmit(BottomNavItem.PROFILE)
             }
 
             else -> bottomNavItemPublisher.tryEmit(null)

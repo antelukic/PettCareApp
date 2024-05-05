@@ -13,6 +13,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 
@@ -40,6 +41,20 @@ internal class SocialWallRepositoryImpl(
     override suspend fun likePost(postId: String) = socialWallApi.likePost(postId)
 
     override suspend fun postComment(comment: String) = socialWallApi.postComment(comment)
+
+    override suspend fun getPostsById(id: String) = flow {
+        runCatching {
+            socialWallApi.getPostsById(id).map { it.toDomain() }
+        }.onSuccess {
+            emit(BaseResponse.Success(it))
+        }.onFailure {
+            if (it is Exception) {
+                emit(BaseResponse.Error.Network(it))
+            } else {
+                emit(BaseResponse.Error.Other)
+            }
+        }
+    }
 
     private fun ApiSocialWallPost.toDomain() = SocialWallPost(
         id = id,

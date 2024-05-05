@@ -48,7 +48,7 @@ fun SocialWallScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SocialWallScreen(
+fun SocialWallScreen(
     uiState: SocialWallUIState,
     onDismiss: () -> Unit,
     onProfileClick: (String) -> Unit,
@@ -57,6 +57,7 @@ private fun SocialWallScreen(
     onUpdateComment: (String) -> Unit,
     onPostComment: () -> Unit,
     modifier: Modifier = Modifier,
+    title: String = stringResource(id = R.string.social_wall_title),
 ) {
     if (uiState.comments != null) {
         CommentsBottomSheet(
@@ -71,7 +72,7 @@ private fun SocialWallScreen(
     LazyColumn(modifier = modifier) {
         item {
             Title(
-                title = stringResource(id = R.string.social_wall_title),
+                title = title,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(dimensionResource(id = R.dimen.spacing_4)),

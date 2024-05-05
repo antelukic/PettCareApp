@@ -13,4 +13,6 @@ interface SocialWallRepository {
     suspend fun likePost(postId: String)
 
     suspend fun postComment(comment: String)
+
+    suspend fun getPostsById(id: String): Flow<BaseResponse<List<SocialWallPost>>>
 }

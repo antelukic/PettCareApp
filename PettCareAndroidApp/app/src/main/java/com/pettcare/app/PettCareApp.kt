@@ -13,6 +13,10 @@ import com.pettcare.app.home.model.di.homeModelModule
 import com.pettcare.app.home.network.di.homeNetworkModule
 import com.pettcare.app.home.presentation.di.homeUiModule
 import com.pettcare.app.navigation.di.navigationModule
+import com.pettcare.app.profile.data.di.profileDataModule
+import com.pettcare.app.profile.domain.di.profileDomainModule
+import com.pettcare.app.profile.network.di.profileNetworkModule
+import com.pettcare.app.profile.presentation.di.profilePresentationModule
 import com.pettcare.app.socialwall.data.repository.di.socialWallDataModule
 import com.pettcare.app.socialwall.domain.di.socialWallDomainModule
 import com.pettcare.app.socialwall.network.di.socialWallNetworkModule
@@ -47,6 +51,10 @@ class PettCareApp : Application() {
                     socialWallDomainModule,
                     socialWallDataModule,
                     socialWallNetworkModule,
+                    profilePresentationModule,
+                    profileDomainModule,
+                    profileDataModule,
+                    profileNetworkModule,
                 ),
             )
         }

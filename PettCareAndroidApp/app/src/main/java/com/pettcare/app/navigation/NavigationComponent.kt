@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.pettcare.app.bottomnav.BottomNavSelectedPublisher
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -41,6 +43,13 @@ fun NavigationComponent(
         }
         composable(NavigationDirections.SocialWall.screen.destination) {
             NavigationDirections.SocialWall.screen.Screen(screenModifier)
+        }
+        composable(
+            NavigationDirections.Profile.screen("").destination,
+            arguments = listOf(navArgument("userId") { type = NavType.StringType }),
+        ) {
+            NavigationDirections.Profile.screen(it.arguments?.getString("userId").orEmpty())
+                .Screen(modifier = screenModifier)
         }
     }
 }

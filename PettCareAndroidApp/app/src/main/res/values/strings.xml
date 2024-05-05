@@ -47,4 +47,5 @@
     <string name="social_wall_comment_button_text">Comment</string>
     <string name="social_wall_num_of_likes">%s likes</string>
     <string name="social_wall_num_of_comments">%s comments</string>
+    <string name="social_wall_title_profile">User posts</string>
 </resources>

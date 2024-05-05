@@ -6,7 +6,8 @@ private const val COERCE_MOST_VALUE = 1.3
 private const val MOCK_ITEMS_IN_LIST_NUMBER = 15
 
 internal class CarePostProfileApiImpl : CarePostProfileApi {
-    override fun response(): List<ApiCarePostProfile> = List(MOCK_ITEMS_IN_LIST_NUMBER) {
+
+    override suspend fun response(): List<ApiCarePostProfile> = List(MOCK_ITEMS_IN_LIST_NUMBER) {
         ApiCarePostProfile(
             name = "Darwin Ware",
             id = "$it",

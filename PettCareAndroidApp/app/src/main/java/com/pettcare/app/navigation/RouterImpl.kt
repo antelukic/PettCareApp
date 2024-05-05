@@ -37,6 +37,8 @@ internal class RouterImpl(
     }
 
     override fun profile(profileId: String?) {
-        // no op
+        profileId?.let {
+            navigationPublisher.publish(NavigationDirections.Profile.screen(profileId))
+        }
     }
 }

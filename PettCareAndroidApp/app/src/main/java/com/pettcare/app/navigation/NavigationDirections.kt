@@ -2,18 +2,16 @@ package com.pettcare.app.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NamedNavArgument
 import com.pettcare.app.auth.login.presentation.LogInScreen
 import com.pettcare.app.auth.signin.presentation.SignInScreen
 import com.pettcare.app.home.presentation.HomeScreen
+import com.pettcare.app.profile.presentation.ProfileScreen
 import com.pettcare.app.socialwall.presentation.SocialWallScreen
 import com.pettcare.app.welcome.WelcomeScreen
 
-object NavigationDirections {
-
+sealed class NavigationDirections {
     object Welcome {
         val screen = object : NavigationDestination {
-            override val arguments: List<NamedNavArgument> = emptyList()
             override val destination: String = "welcome"
 
             @Composable
@@ -25,7 +23,6 @@ object NavigationDirections {
 
     object LogIn {
         val screen = object : NavigationDestination {
-            override val arguments: List<NamedNavArgument> = emptyList()
             override val destination: String = "login"
 
             @Composable
@@ -37,7 +34,6 @@ object NavigationDirections {
 
     object Registration {
         val screen = object : NavigationDestination {
-            override val arguments: List<NamedNavArgument> = emptyList()
             override val destination: String = "registration"
 
             @Composable
@@ -49,7 +45,6 @@ object NavigationDirections {
 
     object Home {
         val screen = object : NavigationDestination {
-            override val arguments: List<NamedNavArgument> = emptyList()
             override val destination: String = "home"
 
             @Composable
@@ -61,12 +56,22 @@ object NavigationDirections {
 
     object SocialWall {
         val screen = object : NavigationDestination {
-            override val arguments: List<NamedNavArgument> = emptyList()
             override val destination: String = "socialWall"
 
             @Composable
             override fun Screen(modifier: Modifier) {
                 SocialWallScreen(modifier)
+            }
+        }
+    }
+
+    object Profile {
+        fun screen(argument: String) = object : NavigationDestination {
+            override val destination: String = "profile/{userId}"
+
+            @Composable
+            override fun Screen(modifier: Modifier) {
+                ProfileScreen(id = argument)
             }
         }
     }

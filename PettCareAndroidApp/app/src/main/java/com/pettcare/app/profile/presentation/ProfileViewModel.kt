@@ -1,28 +1,29 @@
-package com.pettcare.app.socialwall.presentation
+package com.pettcare.app.profile.presentation
 
 import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.core.BaseViewModel
 import com.pettcare.app.navigation.Router
-import com.pettcare.app.socialwall.domain.usecase.GetSocialWallPost
+import com.pettcare.app.profile.domain.model.ProfileData
+import com.pettcare.app.profile.domain.usecase.GetProfileData
 import com.pettcare.app.socialwall.domain.usecase.LikeSocialPost
 import com.pettcare.app.socialwall.domain.usecase.PostSocialPostComment
+import com.pettcare.app.socialwall.presentation.toPresentableSocialPost
 
-class SocialWallViewModel(
-    private val getSocialWallPost: GetSocialWallPost,
+internal class ProfileViewModel(
+    private val getProfileData: GetProfileData,
     private val likeSocialPost: LikeSocialPost,
     private val postComment: PostSocialPostComment,
+    id: String,
     router: Router,
-) : BaseViewModel<SocialWallUIState>(router, SocialWallUIState()) {
+) : BaseViewModel<ProfileUiState>(router, ProfileUiState()) {
 
     init {
         launchInIO {
-            getSocialWallPost.results().collect { response ->
+            getProfileData(id).collect { response ->
                 when (response) {
                     is BaseResponse.Success -> {
-                        updateUiState { currentUiState ->
-                            currentUiState.copy(
-                                posts = response.data.toPresentableSocialPost(),
-                            )
+                        updateUiState {
+                            response.data.toUiState()
                         }
                     }
 
@@ -50,12 +51,6 @@ class SocialWallViewModel(
         }
     }
 
-    fun showProfile(profileId: String) {
-        publishNavigationAction {
-            it.profile(profileId)
-        }
-    }
-
     fun updateComment(value: String) {
         updateUiState { state ->
             state.copy(comment = value)
@@ -67,4 +62,13 @@ class SocialWallViewModel(
             postComment(uiState.value.comment)
         }
     }
+
+    private fun ProfileData.toUiState() = ProfileUiState(
+        name = name,
+        gender = gender,
+        photoUrl = photoUrl,
+        dateOfBirth = dateOfBirth,
+        email = email,
+        posts = posts.toPresentableSocialPost(),
+    )
 }

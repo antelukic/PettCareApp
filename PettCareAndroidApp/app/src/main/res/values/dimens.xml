@@ -12,4 +12,5 @@
     <dimen name="bottom_navigation_shadow_elevation">4dp</dimen>
     <dimen name="divider_thickness">1.5dp</dimen>
     <dimen name="text_field_corners_radius">20dp</dimen>
+    <dimen name="avatar_size_large">64dp</dimen>
 </resources>
