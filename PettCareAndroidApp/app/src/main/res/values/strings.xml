@@ -48,4 +48,16 @@
     <string name="social_wall_num_of_likes">%s likes</string>
     <string name="social_wall_num_of_comments">%s comments</string>
     <string name="social_wall_title_profile">User posts</string>
+    <string name="create_social_post_label_title">Create social post</string>
+    <string name="create_care_post_label_title">Create care post</string>
+    <string name="create_care_post_label_subtitle">Post will be visible on Home</string>
+    <string name="create_social_post_label_subtitle">Post will be visible in the Social Wall</string>
+    <string name="post_text_placeholder">Whats someting that you want to share?</string>
+    <string name="post_address_placeholder">What is the location?</string>
+    <string name="choose_image_content_description">"Choose image "</string>
+    <string name="post_price_placeholder">How much $ do you want for your care?</string>
+    <string name="what_is_the_location">What is the location?</string>
+    <string name="location_example">Vukovarska 11, Osijek Croatia</string>
+    <string name="post_button_text">Post</string>
+    <string name="choose_what_to_create_title">Choose what post you would like to create</string>
 </resources>

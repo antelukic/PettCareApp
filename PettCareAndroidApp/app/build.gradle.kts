@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.maps.utils.compose)
     implementation(libs.accompanist.permissions)
     implementation(libs.kotlinx.serialization)
+    implementation(libs.maps.places)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

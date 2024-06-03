@@ -5,15 +5,15 @@ internal class RouterImpl(
 ) : Router {
 
     override fun welcomeScreen() {
-        navigationPublisher.publish(NavigationDirections.Welcome.screen)
+        navigationPublisher.publish(NavigationDirections.Welcome.screen, null)
     }
 
     override fun loginScreen() {
-        navigationPublisher.publish(NavigationDirections.LogIn.screen)
+        navigationPublisher.publish(NavigationDirections.LogIn.screen, null)
     }
 
     override fun signInScreen() {
-        navigationPublisher.publish(NavigationDirections.Registration.screen)
+        navigationPublisher.publish(NavigationDirections.Registration.screen, null)
     }
 
     override fun goBack() {
@@ -21,15 +21,15 @@ internal class RouterImpl(
     }
 
     override fun home() {
-        navigationPublisher.publish(NavigationDirections.Home.screen)
+        navigationPublisher.publish(NavigationDirections.Home.screen, null)
     }
 
     override fun socialWall() {
-        navigationPublisher.publish(NavigationDirections.SocialWall.screen)
+        navigationPublisher.publish(NavigationDirections.SocialWall.screen, null)
     }
 
     override fun create() {
-        // no op
+        navigationPublisher.publish(NavigationDirections.ChooseWhatToCreate.screen, null)
     }
 
     override fun messages() {
@@ -38,7 +38,13 @@ internal class RouterImpl(
 
     override fun profile(profileId: String?) {
         profileId?.let {
-            navigationPublisher.publish(NavigationDirections.Profile.screen(profileId))
+            navigationPublisher.publish(NavigationDirections.Profile.screen, profileId)
+        }
+    }
+
+    override fun createPost(postTypeId: String?) {
+        postTypeId?.let {
+            navigationPublisher.publish(NavigationDirections.CreatePost.screen, postTypeId)
         }
     }
 }

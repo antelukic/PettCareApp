@@ -1,12 +1,8 @@
 package com.pettcare.app.auth.signin.presentation
 
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -45,18 +40,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.pettcare.app.R
 import com.pettcare.app.auth.sharedcomponents.EmailInput
 import com.pettcare.app.auth.sharedcomponents.PasswordInput
 import com.pettcare.app.auth.sharedcomponents.Title
 import com.pettcare.app.uicomponents.PettCareInputField
 import com.pettcare.app.uicomponents.PettCareProceedButton
+import com.pettcare.app.uicomponents.PhotoPicker
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -204,45 +196,6 @@ private fun SignInScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(dimensionResource(id = R.dimen.spacing_4)),
-            )
-        }
-    }
-}
-
-@Composable
-private fun PhotoPicker(
-    photoUri: Uri?,
-    onPhotoPicked: (Uri?) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        onPhotoPicked(uri)
-    }
-    Box(
-        modifier = modifier
-            .then(
-                Modifier.clickable {
-                    launcher.launch(
-                        PickVisualMediaRequest(
-                            mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly,
-                        ),
-                    )
-                },
-            ),
-    ) {
-        if (photoUri != null) {
-            val painter = rememberAsyncImagePainter(
-                ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(data = photoUri)
-                    .build(),
-            )
-
-            Image(
-                painter = painter,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
             )
         }
     }

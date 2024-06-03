@@ -8,5 +8,8 @@ interface NavigationDestination {
     val destination: String
 
     @Composable
-    fun Screen(modifier: Modifier)
+    fun Screen(
+        modifier: Modifier,
+        arguments: Any?,
+    )
 }

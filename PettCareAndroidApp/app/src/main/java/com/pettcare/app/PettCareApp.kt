@@ -8,6 +8,10 @@ import com.pettcare.app.auth.signin.domain.di.signInDomainModule
 import com.pettcare.app.auth.signin.network.di.firebaseModule
 import com.pettcare.app.auth.signin.presentation.di.signInPresentationModule
 import com.pettcare.app.bottomnav.di.bottomNavigationModule
+import com.pettcare.app.create.data.di.createFeatureDataModule
+import com.pettcare.app.create.domain.di.createFeatureDomainModule
+import com.pettcare.app.create.network.di.createFeatureNetworkModule
+import com.pettcare.app.create.presentation.di.createFeaturePresentationModule
 import com.pettcare.app.home.domain.di.homeDomainModule
 import com.pettcare.app.home.model.di.homeModelModule
 import com.pettcare.app.home.network.di.homeNetworkModule
@@ -55,6 +59,10 @@ class PettCareApp : Application() {
                     profileDomainModule,
                     profileDataModule,
                     profileNetworkModule,
+                    createFeaturePresentationModule,
+                    createFeatureDomainModule,
+                    createFeatureDataModule,
+                    createFeatureNetworkModule,
                 ),
             )
         }

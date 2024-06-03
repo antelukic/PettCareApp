@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.pettcare.app.bottomnav.BottomNavSelectedPublisher
+import com.pettcare.app.create.presentation.PostType
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.compose.koinInject
@@ -28,28 +29,42 @@ fun NavigationComponent(
     ) {
         val screenModifier = Modifier.fillMaxSize()
         composable(NavigationDirections.Welcome.screen.destination) {
-            NavigationDirections.Welcome.screen.Screen(screenModifier)
+            NavigationDirections.Welcome.screen.Screen(screenModifier, null)
         }
 
         composable(NavigationDirections.LogIn.screen.destination) {
-            NavigationDirections.LogIn.screen.Screen(screenModifier)
+            NavigationDirections.LogIn.screen.Screen(screenModifier, null)
         }
 
         composable(NavigationDirections.Registration.screen.destination) {
-            NavigationDirections.Registration.screen.Screen(screenModifier)
+            NavigationDirections.Registration.screen.Screen(screenModifier, null)
         }
         composable(NavigationDirections.Home.screen.destination) {
-            NavigationDirections.Home.screen.Screen(screenModifier)
+            NavigationDirections.Home.screen.Screen(screenModifier, null)
         }
         composable(NavigationDirections.SocialWall.screen.destination) {
-            NavigationDirections.SocialWall.screen.Screen(screenModifier)
+            NavigationDirections.SocialWall.screen.Screen(screenModifier, null)
         }
         composable(
-            NavigationDirections.Profile.screen("").destination,
+            NavigationDirections.Profile.screen.destination,
             arguments = listOf(navArgument("userId") { type = NavType.StringType }),
         ) {
-            NavigationDirections.Profile.screen(it.arguments?.getString("userId").orEmpty())
-                .Screen(modifier = screenModifier)
+            NavigationDirections.Profile.screen.Screen(
+                modifier = screenModifier,
+                it.arguments?.getString("userId").orEmpty(),
+            )
+        }
+        composable(NavigationDirections.ChooseWhatToCreate.screen.destination) {
+            NavigationDirections.ChooseWhatToCreate.screen.Screen(screenModifier, null)
+        }
+        composable(
+            route = NavigationDirections.CreatePost.screen.destination,
+            arguments = listOf(navArgument("postTypeId") { type = NavType.StringType }),
+        ) { backstackEntry ->
+            NavigationDirections.CreatePost.screen.Screen(
+                modifier = screenModifier,
+                arguments = backstackEntry.arguments?.getString("postTypeId") ?: PostType.SOCIAL.id,
+            )
         }
     }
 }
@@ -79,7 +94,12 @@ private fun navigationHandler(
 ) {
     when (navAction) {
         is NavigationAction.Navigate -> {
-            navController.navigate(navAction.navigationDestination.destination)
+            val route = if (navAction.arguments.isNullOrBlank()) {
+                navAction.navigationDestination.destination
+            } else {
+                navAction.navigationDestination.destination.split("/").first() + "/" + navAction.arguments
+            }
+            navController.navigate(route = route)
         }
 
         is NavigationAction.NavigateBack -> {

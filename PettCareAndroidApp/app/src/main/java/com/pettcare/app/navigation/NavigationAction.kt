@@ -5,7 +5,7 @@ internal sealed class NavigationAction {
     @Deprecated("Use only as initial action")
     data object Default : NavigationAction()
 
-    data class Navigate(val navigationDestination: NavigationDestination) : NavigationAction()
+    data class Navigate(val navigationDestination: NavigationDestination, val arguments: String?) : NavigationAction()
 
     data class PopUpTo(
         val navigationDestination: NavigationDestination,

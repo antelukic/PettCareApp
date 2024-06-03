@@ -5,7 +5,7 @@ sealed interface BaseResponse<out T> {
     data object Loading : BaseResponse<Nothing>
 
     sealed class Error : BaseResponse<Nothing> {
-        data class Network(val exception: Exception) : Error()
+        data object Network : Error()
         data object Other : Error()
     }
 

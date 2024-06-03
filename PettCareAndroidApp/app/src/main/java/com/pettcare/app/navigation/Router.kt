@@ -19,4 +19,6 @@ interface Router {
     fun messages()
 
     fun profile(profileId: String?)
+
+    fun createPost(postTypeId: String?)
 }

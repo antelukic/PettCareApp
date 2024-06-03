@@ -49,7 +49,7 @@ internal class SocialWallRepositoryImpl(
             emit(BaseResponse.Success(it))
         }.onFailure {
             if (it is Exception) {
-                emit(BaseResponse.Error.Network(it))
+                emit(BaseResponse.Error.Network)
             } else {
                 emit(BaseResponse.Error.Other)
             }

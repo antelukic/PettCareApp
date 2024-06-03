@@ -14,6 +14,8 @@ class FirebaseStorage(
 
         enum class PATHS(val path: String) {
             AVATAR("images/avatars/"),
+            CARE_POST("images/care/"),
+            SOCIAL_POST("images/social"),
         }
     }
 }

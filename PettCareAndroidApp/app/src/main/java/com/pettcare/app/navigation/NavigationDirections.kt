@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.pettcare.app.auth.login.presentation.LogInScreen
 import com.pettcare.app.auth.signin.presentation.SignInScreen
+import com.pettcare.app.create.presentation.PostType
+import com.pettcare.app.create.presentation.choosewhattocreate.ChooseWhatToCreateScreen
+import com.pettcare.app.create.presentation.createpost.CreatePostScreen
 import com.pettcare.app.home.presentation.HomeScreen
 import com.pettcare.app.profile.presentation.ProfileScreen
 import com.pettcare.app.socialwall.presentation.SocialWallScreen
@@ -15,7 +18,10 @@ sealed class NavigationDirections {
             override val destination: String = "welcome"
 
             @Composable
-            override fun Screen(modifier: Modifier) {
+            override fun Screen(
+                modifier: Modifier,
+                arguments: Any?,
+            ) {
                 WelcomeScreen(modifier)
             }
         }
@@ -26,7 +32,10 @@ sealed class NavigationDirections {
             override val destination: String = "login"
 
             @Composable
-            override fun Screen(modifier: Modifier) {
+            override fun Screen(
+                modifier: Modifier,
+                arguments: Any?,
+            ) {
                 LogInScreen(modifier)
             }
         }
@@ -37,7 +46,10 @@ sealed class NavigationDirections {
             override val destination: String = "registration"
 
             @Composable
-            override fun Screen(modifier: Modifier) {
+            override fun Screen(
+                modifier: Modifier,
+                arguments: Any?,
+            ) {
                 SignInScreen(modifier)
             }
         }
@@ -48,7 +60,10 @@ sealed class NavigationDirections {
             override val destination: String = "home"
 
             @Composable
-            override fun Screen(modifier: Modifier) {
+            override fun Screen(
+                modifier: Modifier,
+                arguments: Any?,
+            ) {
                 HomeScreen(modifier)
             }
         }
@@ -59,19 +74,53 @@ sealed class NavigationDirections {
             override val destination: String = "socialWall"
 
             @Composable
-            override fun Screen(modifier: Modifier) {
+            override fun Screen(
+                modifier: Modifier,
+                arguments: Any?,
+            ) {
                 SocialWallScreen(modifier)
             }
         }
     }
 
     object Profile {
-        fun screen(argument: String) = object : NavigationDestination {
+        val screen = object : NavigationDestination {
             override val destination: String = "profile/{userId}"
 
             @Composable
-            override fun Screen(modifier: Modifier) {
-                ProfileScreen(id = argument)
+            override fun Screen(
+                modifier: Modifier,
+                arguments: Any?,
+            ) {
+                ProfileScreen(id = (arguments as? String).orEmpty(), modifier = modifier)
+            }
+        }
+    }
+
+    object ChooseWhatToCreate {
+        val screen = object : NavigationDestination {
+            override val destination: String = "chooseWhatToCreate"
+
+            @Composable
+            override fun Screen(
+                modifier: Modifier,
+                arguments: Any?,
+            ) {
+                ChooseWhatToCreateScreen(modifier)
+            }
+        }
+    }
+
+    object CreatePost {
+        val screen = object : NavigationDestination {
+            override val destination: String = "create/{postTypeId}"
+
+            @Composable
+            override fun Screen(
+                modifier: Modifier,
+                arguments: Any?,
+            ) {
+                CreatePostScreen(PostType.fromId(arguments as? String), modifier)
             }
         }
     }

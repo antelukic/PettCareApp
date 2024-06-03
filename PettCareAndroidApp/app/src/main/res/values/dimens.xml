@@ -13,4 +13,5 @@
     <dimen name="divider_thickness">1.5dp</dimen>
     <dimen name="text_field_corners_radius">20dp</dimen>
     <dimen name="avatar_size_large">64dp</dimen>
+    <dimen name="icon_size_big">48dp</dimen>
 </resources>
