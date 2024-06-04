@@ -54,9 +54,12 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable-collections" }
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-version" }
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor-version" }
-ktor-serialization = { group = "io.ktor", name = "ktor-client-serialization-kotlinx-json", version.ref = "ktor-serialization" }
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-serialization" }
 ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-content-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor-version" }
+ktor-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref = "ktor-version"}
+ktor-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor-version"}
+ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor-version"}
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines-core" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-version" }
