@@ -66,6 +66,9 @@ fun NavigationComponent(
                 arguments = backstackEntry.arguments?.getString("postTypeId") ?: PostType.SOCIAL.id,
             )
         }
+        composable(NavigationDirections.Chat.screen.destination) {
+            NavigationDirections.Chat.screen.Screen(screenModifier, null)
+        }
     }
 }
 
