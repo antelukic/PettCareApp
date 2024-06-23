@@ -21,7 +21,7 @@ fun UserProfilePhoto(
     modifier: Modifier = Modifier,
     size: Dp = dimensionResource(id = R.dimen.avatar_size),
 ) {
-    if (photoUrl != null) {
+    if (photoUrl.isNullOrBlank().not()) {
         AsyncImage(
             model = photoUrl,
             contentDescription = "Profile image",

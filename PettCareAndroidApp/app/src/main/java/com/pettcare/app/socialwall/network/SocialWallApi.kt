@@ -9,4 +9,6 @@ interface SocialWallApi {
     suspend fun likePost(postId: String)
 
     suspend fun postComment(comment: String)
+
+    suspend fun getPostsById(id: String): List<ApiSocialWallPost>
 }

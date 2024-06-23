@@ -35,4 +35,24 @@ internal class SocialWallApiImpl : SocialWallApi {
     override suspend fun postComment(comment: String) {
         // implement once backend is ready
     }
+
+    override suspend fun getPostsById(id: String) = List(LIST_SIZE) {
+        ApiSocialWallPost(
+            id = "some id $it",
+            creatorName = "Jhon Doe $it",
+            avatarUrl = null,
+            numOfComments = "4",
+            numOfLikes = "1203",
+            text = "Lorem ipsum something something",
+            photoUrl = null,
+            comments = List(LIST_SIZE_COMMENTS) {
+                ApiSocialWallPostComments(
+                    id = it.toString(),
+                    creatorName = "Someone Important",
+                    avatarUrl = null,
+                    text = "This is a great app! Good job Ante.",
+                )
+            },
+        )
+    }
 }

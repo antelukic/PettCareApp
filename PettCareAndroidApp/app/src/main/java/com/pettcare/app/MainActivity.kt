@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.compose.rememberNavController
+import com.google.android.libraries.places.api.Places
 import com.pettcare.app.bottomnav.BottomNavItem
 import com.pettcare.app.bottomnav.BottomNavItemSelectedObserver
 import com.pettcare.app.bottomnav.BottomNavSelectedPublisher
@@ -27,6 +28,7 @@ import org.koin.compose.koinInject
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enablePlacesApi()
         setContent {
             MyApplicationTheme {
                 Scaffold(
@@ -46,6 +48,17 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun enablePlacesApi() {
+        val apiKey = BuildConfig.MAPS_API_KEY
+
+        if (apiKey.isEmpty()) {
+            finish()
+            return
+        }
+
+        Places.initializeWithNewPlacesApiEnabled(applicationContext, apiKey)
     }
 }
 

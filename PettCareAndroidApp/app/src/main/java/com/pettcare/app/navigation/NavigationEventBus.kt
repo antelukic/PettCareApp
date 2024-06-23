@@ -17,8 +17,8 @@ internal class NavigationEventBus : NavigationObserver, NavigationPublisher {
 
     override fun observe(): Flow<NavigationAction> = navigationState
 
-    override fun publish(destination: NavigationDestination) {
-        navigationState.tryEmit(NavigationAction.Navigate(destination))
+    override fun publish(destination: NavigationDestination, arguments: String?) {
+        navigationState.tryEmit(NavigationAction.Navigate(destination, arguments))
     }
 
     override fun popUpTo(destination: NavigationDestination, inclusive: Boolean, popUpToDestination: String) {
