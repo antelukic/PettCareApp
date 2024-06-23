@@ -38,6 +38,10 @@ internal class BottomNavHandler(
                 bottomNavItemPublisher.tryEmit(BottomNavItem.CREATE)
             }
 
+            NavigationDirections.Chat.screen.destination -> {
+                bottomNavItemPublisher.tryEmit(BottomNavItem.CHAT)
+            }
+
             else -> bottomNavItemPublisher.tryEmit(null)
         }
     }

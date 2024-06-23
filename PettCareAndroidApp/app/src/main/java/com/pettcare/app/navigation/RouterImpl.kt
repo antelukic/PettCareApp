@@ -33,7 +33,7 @@ internal class RouterImpl(
     }
 
     override fun messages() {
-        // no op
+        navigationPublisher.publish(NavigationDirections.Chat.screen, null)
     }
 
     override fun profile(profileId: String?) {
