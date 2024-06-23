@@ -39,6 +39,9 @@ fun NavigationComponent(
         composable(NavigationDirections.Home.screen.destination) {
             NavigationDirections.Home.screen.Screen(screenModifier)
         }
+        composable(NavigationDirections.SocialWall.screen.destination) {
+            NavigationDirections.SocialWall.screen.Screen(screenModifier)
+        }
     }
 }
 

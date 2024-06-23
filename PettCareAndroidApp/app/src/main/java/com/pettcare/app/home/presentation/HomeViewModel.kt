@@ -15,8 +15,8 @@ class HomeViewModel(
 ) : BaseViewModel<HomeUiState>(router, initialViewState) {
 
     fun onProfileClicked(id: String) {
-        val profile = uiState.value.profiles.firstOrNull { profile ->
-            profile.id == id
+        publishNavigationAction {
+            it.profile(id)
         }
     }
 

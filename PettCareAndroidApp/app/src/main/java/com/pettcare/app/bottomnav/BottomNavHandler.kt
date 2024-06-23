@@ -25,6 +25,9 @@ internal class BottomNavHandler(
             NavigationDirections.Home.screen.destination -> {
                 bottomNavItemPublisher.tryEmit(BottomNavItem.HOME)
             }
+            NavigationDirections.SocialWall.screen.destination -> {
+                bottomNavItemPublisher.tryEmit(BottomNavItem.SOCIAL_WALL)
+            }
 
             else -> bottomNavItemPublisher.tryEmit(null)
         }
@@ -36,7 +39,7 @@ internal class BottomNavHandler(
             BottomNavItem.SOCIAL_WALL -> router.socialWall()
             BottomNavItem.CREATE -> router.create()
             BottomNavItem.CHAT -> router.messages()
-            BottomNavItem.PROFILE -> router.profile()
+            BottomNavItem.PROFILE -> router.profile(null)
         }
     }
 }

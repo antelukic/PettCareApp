@@ -6,8 +6,10 @@
     <dimen name="spacing_10">40dp</dimen>
     <dimen name="registration_photo_size">200dp</dimen>
     <dimen name="icon_default">24dp</dimen>
-    <dimen name="care_post_avatar_size">32dp</dimen>
+    <dimen name="avatar_size">32dp</dimen>
     <dimen name="care_post_border_stroke_width">2dp</dimen>
     <dimen name="spacing_2">8dp</dimen>
     <dimen name="bottom_navigation_shadow_elevation">4dp</dimen>
+    <dimen name="divider_thickness">1.5dp</dimen>
+    <dimen name="text_field_corners_radius">20dp</dimen>
 </resources>

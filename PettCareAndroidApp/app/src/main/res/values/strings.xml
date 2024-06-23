@@ -42,4 +42,9 @@
     <string name="create_label_bottom_nav">Create</string>
     <string name="profile_label_bottom_nav">Profile</string>
     <string name="social_wall_label_bottom_nav">Social wall</string>
+    <string name="social_wall_title">Social wall</string>
+    <string name="social_wall_like_button_text">Like</string>
+    <string name="social_wall_comment_button_text">Comment</string>
+    <string name="social_wall_num_of_likes">%s likes</string>
+    <string name="social_wall_num_of_comments">%s comments</string>
 </resources>

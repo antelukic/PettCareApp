@@ -13,6 +13,10 @@ import com.pettcare.app.home.model.di.homeModelModule
 import com.pettcare.app.home.network.di.homeNetworkModule
 import com.pettcare.app.home.presentation.di.homeUiModule
 import com.pettcare.app.navigation.di.navigationModule
+import com.pettcare.app.socialwall.data.repository.di.socialWallDataModule
+import com.pettcare.app.socialwall.domain.di.socialWallDomainModule
+import com.pettcare.app.socialwall.network.di.socialWallNetworkModule
+import com.pettcare.app.socialwall.presentation.di.socialWallPresentationModule
 import com.pettcare.app.welcome.di.welcomeModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -39,6 +43,10 @@ class PettCareApp : Application() {
                     homeModelModule,
                     homeNetworkModule,
                     bottomNavigationModule,
+                    socialWallPresentationModule,
+                    socialWallDomainModule,
+                    socialWallDataModule,
+                    socialWallNetworkModule,
                 ),
             )
         }
