@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Pett Care</string>
+    <string name="welcome_screen_message">Welcome to PettCare</string>
+    <string name="welcome_sign_in_message">Sign in</string>
+    <string name="welcome_log_in_message">Log in to your PettCare account</string>
+    <string name="log_in_title">Log in</string>
+    <string name="email_placeholder">example@mail.com</string>
+    <string name="log_in_button_text">Log in</string>
+    <string name="password_placeholder">*******</string>
+    <string name="change_password_visibility_accessibility">Change password visibility</string>
+    <string name="unkown_error_message">Ooops! Something went wrong. No worries, we will resolve this shortly!</string>
+    <string name="network_error_message">Our service seems to be down. Please try again later!</string>
+    <string name="registration_title_label">Create your Pett Care account</string>
+    <string name="registration_name_label">Name:</string>
+    <string name="registration_name_placeholder">John</string>
+    <string name="registration_empty_field_error">This field is required to proceed!</string>
+    <string name="registration_password_no_match_error">Passwords do not match!</string>
+    <string name="registration_surname_label">Surname:</string>
+    <string name="registration_surname_placeholder">Doe</string>
+    <string name="registration_email_label">Email:</string>
+    <string name="registration_password_label">Password</string>
+    <string name="registration_repeat_password_label">Repeat password:</string>
+    <string name="registration_age_label">Age:</string>
+    <string name="registration_age_placeholder">23/11/2024</string>
+    <string name="registration_gender_label">Gender</string>
+    <string-array name="genders">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+    <string name="registration_next_text">Next</string>
+    <string name="registration_submit_text">Submit</string>
+    <string name="registration_previous_text">Previous</string>
+    <string name="registration_date_picker_ok">OK</string>
+</resources>
