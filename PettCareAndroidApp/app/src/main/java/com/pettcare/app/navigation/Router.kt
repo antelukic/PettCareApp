@@ -9,4 +9,14 @@ interface Router {
     fun signInScreen()
 
     fun goBack()
+
+    fun home()
+
+    fun socialWall()
+
+    fun create()
+
+    fun messages()
+
+    fun profile()
 }

@@ -19,4 +19,24 @@ internal class RouterImpl(
     override fun goBack() {
         navigationPublisher.goBack()
     }
+
+    override fun home() {
+        navigationPublisher.publish(NavigationDirections.Home.screen)
+    }
+
+    override fun socialWall() {
+        // no op
+    }
+
+    override fun create() {
+        // no op
+    }
+
+    override fun messages() {
+        // no op
+    }
+
+    override fun profile() {
+        // no op
+    }
 }
