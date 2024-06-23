@@ -3,5 +3,10 @@
     <dimen name="spacing_1">4dp</dimen>
     <dimen name="spacing_4">16dp</dimen>
     <dimen name="spacing_5">20dp</dimen>
+    <dimen name="spacing_10">40dp</dimen>
     <dimen name="registration_photo_size">200dp</dimen>
+    <dimen name="icon_default">24dp</dimen>
+    <dimen name="care_post_avatar_size">32dp</dimen>
+    <dimen name="care_post_border_stroke_width">2dp</dimen>
+    <dimen name="spacing_2">8dp</dimen>
 </resources>

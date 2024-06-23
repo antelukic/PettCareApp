@@ -32,4 +32,8 @@
     <string name="registration_submit_text">Submit</string>
     <string name="registration_previous_text">Previous</string>
     <string name="registration_date_picker_ok">OK</string>
+    <string name="home_screen_btn_toggle_map">Map</string>
+    <string name="home_screen_btn_toggle_list">List</string>
+    <string name="home_title">Explore</string>
+    <string name="price">Price: %s€</string>
 </resources>

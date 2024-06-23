@@ -20,7 +20,7 @@ fun NavigationComponent(
     HandleNavigation(navController = navController)
     NavHost(
         navController = navController,
-        startDestination = NavigationDirections.Welcome.screen.destination,
+        startDestination = NavigationDirections.Home.screen.destination,
         modifier = modifier,
     ) {
         val screenModifier = Modifier.fillMaxSize()
@@ -34,6 +34,9 @@ fun NavigationComponent(
 
         composable(NavigationDirections.Registration.screen.destination) {
             NavigationDirections.Registration.screen.Screen(screenModifier)
+        }
+        composable(NavigationDirections.Home.screen.destination) {
+            NavigationDirections.Home.screen.Screen(screenModifier)
         }
     }
 }

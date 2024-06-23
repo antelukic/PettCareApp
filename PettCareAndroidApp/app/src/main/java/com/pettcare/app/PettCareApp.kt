@@ -7,6 +7,10 @@ import com.pettcare.app.auth.login.presentation.di.loginPresentationModule
 import com.pettcare.app.auth.signin.domain.di.signInDomainModule
 import com.pettcare.app.auth.signin.network.di.firebaseModule
 import com.pettcare.app.auth.signin.presentation.di.signInPresentationModule
+import com.pettcare.app.home.domain.di.homeDomainModule
+import com.pettcare.app.home.model.di.homeModelModule
+import com.pettcare.app.home.network.di.homeNetworkModule
+import com.pettcare.app.home.presentation.di.homeUiModule
 import com.pettcare.app.navigation.di.navigationModule
 import com.pettcare.app.welcome.di.welcomeModule
 import org.koin.android.ext.koin.androidContext
@@ -29,6 +33,10 @@ class PettCareApp : Application() {
                     signInPresentationModule,
                     signInDomainModule,
                     firebaseModule,
+                    homeUiModule,
+                    homeDomainModule,
+                    homeModelModule,
+                    homeNetworkModule,
                 ),
             )
         }
