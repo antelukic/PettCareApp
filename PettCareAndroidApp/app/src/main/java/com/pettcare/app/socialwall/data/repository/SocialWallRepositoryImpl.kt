@@ -1,76 +1,71 @@
 package com.pettcare.app.socialwall.data.repository
 
+import com.pettcare.app.core.BaseApiResponse
 import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.extensions.loadingOnStart
-import com.pettcare.app.socialwall.domain.model.SocialPostComment
+import com.pettcare.app.home.network.response.UserResponseApi
+import com.pettcare.app.home.network.service.UserService
 import com.pettcare.app.socialwall.domain.model.SocialWallPost
 import com.pettcare.app.socialwall.domain.repository.SocialWallRepository
-import com.pettcare.app.socialwall.network.SocialWallApi
-import com.pettcare.app.socialwall.network.model.ApiSocialWallPost
-import com.pettcare.app.socialwall.network.model.ApiSocialWallPostComments
+import com.pettcare.app.socialwall.network.SocialWallService
+import com.pettcare.app.socialwall.network.model.SocialWallPostResponseApi
+import com.pettcare.app.socialwall.network.model.SocialWallPostsResponseApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 
-private const val DEBOUNCE_TIME = 2000L
-
 internal class SocialWallRepositoryImpl(
-    private val socialWallApi: SocialWallApi,
+    private val socialWallService: SocialWallService,
+    private val userService: UserService,
 ) : SocialWallRepository {
 
-    private val pagePublisher = MutableSharedFlow<Int>(1)
+    private val pageAndUserIdPublisher = MutableSharedFlow<Pair<Int, String?>>(1)
 
-    override suspend fun publishPage(page: Int) {
-        pagePublisher.emit(page)
+    override suspend fun publishPage(page: Int, userId: String?) {
+        pageAndUserIdPublisher.emit(page to userId)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    override fun results(): Flow<BaseResponse<List<SocialWallPost>>> = pagePublisher.mapLatest { page ->
-        BaseResponse.Success(socialWallApi.results(page).map { it.toDomain() })
-    }.loadingOnStart()
-        .debounce(DEBOUNCE_TIME)
-        .onStart {
-            publishPage(0)
-        }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun results(): Flow<BaseResponse<List<SocialWallPost>>> =
+        pageAndUserIdPublisher.mapLatest { (page, userId) ->
+            handleResponse(socialWallService.results(page, userId))
+        }.loadingOnStart()
+            .onStart {
+                publishPage(0)
+            }
 
-    override suspend fun likePost(postId: String) = socialWallApi.likePost(postId)
+    override suspend fun likePost(postId: String) = socialWallService.likePost(postId)
 
-    override suspend fun postComment(comment: String) = socialWallApi.postComment(comment)
+    override suspend fun postComment(comment: String) = socialWallService.postComment(comment)
 
-    override suspend fun getPostsById(id: String) = flow {
-        runCatching {
-            socialWallApi.getPostsById(id).map { it.toDomain() }
-        }.onSuccess {
-            emit(BaseResponse.Success(it))
-        }.onFailure {
-            if (it is Exception) {
-                emit(BaseResponse.Error.Network)
-            } else {
-                emit(BaseResponse.Error.Other)
+    private suspend fun handleResponse(
+        response: BaseApiResponse<SocialWallPostsResponseApi>?,
+    ): BaseResponse<List<SocialWallPost>> {
+        if (response?.data == null) return BaseResponse.Error.Network
+        val userInformations = response.data.items.mapNotNull { getUserInformation(it.creatorId) }
+        val postsWithUserInfo = response.data.items.mapNotNull { post ->
+            userInformations.find { user -> user.id == post.creatorId }?.let { user ->
+                post to user
             }
         }
+        return BaseResponse.Success(getSocialWallData(postsWithUserInfo))
     }
 
-    private fun ApiSocialWallPost.toDomain() = SocialWallPost(
-        id = id,
-        creatorName = creatorName,
-        avatarUrl = avatarUrl,
-        photoUrl = photoUrl,
-        numOfLikes = numOfLikes,
-        numOfComments = numOfComments,
-        text = text,
-        comments = comments.map { it.toDomain() },
-    )
+    private suspend fun getUserInformation(userId: String): UserResponseApi? = userService.getUserById(userId)?.data
 
-    private fun ApiSocialWallPostComments.toDomain() = SocialPostComment(
-        id = id,
-        name = creatorName,
-        avatarUrl = avatarUrl,
-        text = text,
-    )
+    private fun getSocialWallData(postsWithUserInfo: List<Pair<SocialWallPostResponseApi, UserResponseApi>>) =
+        postsWithUserInfo.map { (post, userInfo) ->
+            SocialWallPost(
+                id = post.id,
+                creatorName = userInfo.name,
+                avatarUrl = userInfo.photoUrl,
+                photoUrl = post.photoUrl,
+                numOfLikes = "30",
+                numOfComments = "20",
+                text = post.text,
+                comments = listOf(),
+            )
+        }
 }

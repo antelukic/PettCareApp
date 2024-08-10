@@ -6,13 +6,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface SocialWallRepository {
 
-    suspend fun publishPage(page: Int)
+    suspend fun publishPage(page: Int, userId: String? = null)
 
     fun results(): Flow<BaseResponse<List<SocialWallPost>>>
 
     suspend fun likePost(postId: String)
 
     suspend fun postComment(comment: String)
-
-    suspend fun getPostsById(id: String): Flow<BaseResponse<List<SocialWallPost>>>
 }

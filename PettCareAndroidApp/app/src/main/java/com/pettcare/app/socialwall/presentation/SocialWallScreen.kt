@@ -10,12 +10,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
@@ -30,6 +35,8 @@ import com.pettcare.app.socialwall.presentation.comments.CommentsBottomSheet
 import com.pettcare.app.uicomponents.Avatar
 import org.koin.androidx.compose.koinViewModel
 
+private const val BUFFER = 2
+
 @Composable
 fun SocialWallScreen(modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<SocialWallViewModel>()
@@ -43,6 +50,7 @@ fun SocialWallScreen(modifier: Modifier = Modifier) {
         onDismiss = viewModel::dismissComments,
         onPostComment = viewModel::postComment,
         onUpdateComment = viewModel::updateComment,
+        loadMore = viewModel::nextPage,
         modifier = modifier,
     )
 }
@@ -56,6 +64,7 @@ fun SocialWallScreen(
     onCommentsClick: (String) -> Unit,
     onUpdateComment: (String) -> Unit,
     onPostComment: () -> Unit,
+    loadMore: () -> Unit,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.social_wall_title),
 ) {
@@ -69,7 +78,23 @@ fun SocialWallScreen(
             onProfileClick = onProfileClick,
         )
     }
-    LazyColumn(modifier = modifier) {
+    val listState = rememberLazyListState()
+
+    val reachedBottom: Boolean by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index != 0 && lastVisibleItem?.index == listState.layoutInfo.totalItemsCount - BUFFER
+        }
+    }
+
+    LaunchedEffect(reachedBottom) {
+        if (reachedBottom) loadMore()
+    }
+
+    LazyColumn(
+        state = listState,
+        modifier = modifier,
+    ) {
         item {
             Title(
                 title = title,
@@ -155,6 +180,9 @@ fun PostContent(
                 model = photoUrl,
                 contentDescription = "Post photo",
                 contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimensionResource(id = R.dimen.social_wall_post_height)),
             )
         }
 
