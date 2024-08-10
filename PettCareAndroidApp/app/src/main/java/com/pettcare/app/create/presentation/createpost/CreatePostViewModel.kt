@@ -1,6 +1,7 @@
 package com.pettcare.app.create.presentation.createpost
 
 import android.net.Uri
+import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.core.BaseViewModel
 import com.pettcare.app.create.domain.model.CarePostParams
 import com.pettcare.app.create.domain.model.SocialPostParams
@@ -21,6 +22,26 @@ class CreatePostViewModel(
         launchInMain {
             uiState.collect {
                 shouldEnablePostButton()
+            }
+        }
+
+        launchInMain {
+            createSocialPost.results.collect {
+                if (it is BaseResponse.Success) {
+                    publishNavigationAction { router ->
+                        router.create()
+                    }
+                }
+            }
+        }
+
+        launchInMain {
+            createCarePost.results.collect {
+                if (it is BaseResponse.Success) {
+                    publishNavigationAction { router ->
+                        router.create()
+                    }
+                }
             }
         }
     }
