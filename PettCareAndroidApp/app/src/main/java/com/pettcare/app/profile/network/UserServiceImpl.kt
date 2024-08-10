@@ -1,4 +1,4 @@
-package com.pettcare.app.home.network.service
+package com.pettcare.app.profile.network
 
 import com.pettcare.app.core.BaseApiResponse
 import com.pettcare.app.home.network.response.UserResponseApi

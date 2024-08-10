@@ -58,6 +58,7 @@ class HomeViewModel(
             location = it.location,
             address = it.address,
             postPhotoUrl = it.postImageUrl,
+            creatorId = it.creatorId,
         )
     }.toImmutableList()
 

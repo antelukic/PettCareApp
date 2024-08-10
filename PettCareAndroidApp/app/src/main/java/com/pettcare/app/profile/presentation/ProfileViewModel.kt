@@ -7,29 +7,28 @@ import com.pettcare.app.profile.domain.model.ProfileData
 import com.pettcare.app.profile.domain.usecase.GetProfileData
 import com.pettcare.app.socialwall.domain.usecase.LikeSocialPost
 import com.pettcare.app.socialwall.domain.usecase.PostSocialPostComment
+import com.pettcare.app.socialwall.presentation.PresentableSocialPost
 import com.pettcare.app.socialwall.presentation.toPresentableSocialPost
+import kotlinx.collections.immutable.toImmutableList
 
 internal class ProfileViewModel(
     private val getProfileData: GetProfileData,
     private val likeSocialPost: LikeSocialPost,
     private val postComment: PostSocialPostComment,
-    id: String,
+    private val id: String,
     router: Router,
 ) : BaseViewModel<ProfileUiState>(router, ProfileUiState()) {
 
+    private var shouldLoadNextPage = true
+    private var page = 0
+
     init {
         launchInIO {
-            getProfileData(id).collect { response ->
-                when (response) {
-                    is BaseResponse.Success -> {
-                        updateUiState {
-                            response.data.toUiState()
-                        }
-                    }
+            getProfileData.results.collect(::handleResponse)
+        }
 
-                    else -> {}
-                }
-            }
+        launchInIO {
+            getProfileData(page, id)
         }
     }
 
@@ -63,12 +62,32 @@ internal class ProfileViewModel(
         }
     }
 
-    private fun ProfileData.toUiState() = ProfileUiState(
+    fun nextPage() {
+        launchInIO {
+            if (shouldLoadNextPage.not()) return@launchInIO
+            page++
+            getProfileData(page, id)
+        }
+    }
+
+    private fun handleResponse(response: BaseResponse<ProfileData>) {
+        when (response) {
+            is BaseResponse.Success -> {
+                updateUiState { state ->
+                    response.data.toUiState(state.posts)
+                }
+            }
+
+            else -> {}
+        }
+    }
+
+    private fun ProfileData.toUiState(oldPosts: List<PresentableSocialPost>) = ProfileUiState(
         name = name,
         gender = gender,
         photoUrl = photoUrl,
         dateOfBirth = dateOfBirth,
         email = email,
-        posts = posts.toPresentableSocialPost(),
+        posts = (oldPosts + posts.toPresentableSocialPost()).toImmutableList(),
     )
 }

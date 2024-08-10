@@ -6,5 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
 
-    suspend fun getProfileById(id: String): Flow<BaseResponse<ProfileData>>
+    fun results(): Flow<BaseResponse<ProfileData>>
+
+    suspend fun getProfileById(page: Int, id: String)
 }

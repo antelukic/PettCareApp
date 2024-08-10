@@ -25,6 +25,7 @@ data class PresentableSocialPost(
     val numOfComments: String,
     val text: String?,
     val comments: ImmutableList<PresentableSocialPostComment>,
+    val creatorId: String,
 )
 
 fun List<SocialWallPost>.toPresentableSocialPost() = map {
@@ -37,6 +38,7 @@ fun List<SocialWallPost>.toPresentableSocialPost() = map {
         numOfComments = it.numOfComments,
         text = it.text,
         comments = it.comments.map { comment -> comment.toPresentableSocialPostComment() }.toImmutableList(),
+        creatorId = it.creatorId,
     )
 }.toImmutableList()
 

@@ -39,6 +39,7 @@ fun ProfileScreen(
         onShowComments = viewModel::showComments,
         onDismissComments = viewModel::dismissComments,
         onCommentTextChanged = viewModel::updateComment,
+        loadMore = viewModel::nextPage,
         modifier = modifier.padding(dimensionResource(id = R.dimen.spacing_4)),
     )
 }
@@ -51,6 +52,7 @@ private fun ProfileScreen(
     onShowComments: (String) -> Unit,
     onDismissComments: () -> Unit,
     onCommentTextChanged: (String) -> Unit,
+    loadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -86,7 +88,7 @@ private fun ProfileScreen(
             onCommentsClick = onShowComments,
             onUpdateComment = onCommentTextChanged,
             onPostComment = onPostComment,
-            loadMore = {},
+            loadMore = loadMore,
             title = stringResource(id = R.string.social_wall_title_profile),
         )
     }
