@@ -1,4 +1,4 @@
-package com.pettcare.app.welcome.translations
+package com.pettcare.app.welcome.presentation.translations
 
 import android.content.Context
 import com.pettcare.app.R

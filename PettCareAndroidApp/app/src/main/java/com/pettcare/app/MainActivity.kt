@@ -17,6 +17,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.compose.rememberNavController
 import com.google.android.libraries.places.api.Places
+import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import com.pettcare.app.bottomnav.BottomNavItem
 import com.pettcare.app.bottomnav.BottomNavItemSelectedObserver
 import com.pettcare.app.bottomnav.BottomNavSelectedPublisher
@@ -29,6 +33,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enablePlacesApi()
+        Firebase.initialize(context = this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance(),
+        )
         setContent {
             MyApplicationTheme {
                 Scaffold(

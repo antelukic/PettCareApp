@@ -85,7 +85,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.compose.icons.extended)
     implementation(libs.coil.compose)
-    implementation(libs.firebase.storage)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.app.check)
     implementation(libs.firebase.storage)
     implementation(libs.immutable.collections)
     implementation(libs.play.services.maps)
@@ -104,6 +105,8 @@ dependencies {
     implementation(libs.ktor.cio)
     implementation(libs.ktor.client.serialization)
     implementation(libs.maps.places)
+    implementation(libs.maps.places)
+    implementation(libs.shared.preferences)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

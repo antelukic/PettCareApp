@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val signInDomainModule = module {
     factory { GetDateFromMillis() }
-    factory { SignInUser(get()) }
+    single { SignInUser(get()) }
 }

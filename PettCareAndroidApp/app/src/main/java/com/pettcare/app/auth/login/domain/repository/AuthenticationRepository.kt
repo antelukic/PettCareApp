@@ -14,4 +14,8 @@ interface AuthenticationRepository {
     fun signInResults(): Flow<BaseResponse<Boolean>>
 
     suspend fun requestSignIn(params: SignInUserParams)
+
+    suspend fun authenticateUser()
+
+    fun authenticateResults(): Flow<Boolean>
 }

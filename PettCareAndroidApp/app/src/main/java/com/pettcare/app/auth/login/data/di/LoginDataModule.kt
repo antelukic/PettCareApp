@@ -8,6 +8,6 @@ import org.koin.dsl.module
 val authDataModule = module {
 
     factory<AuthenticationRepository> {
-        AuthenticationRepositoryImpl(get(), androidContext())
+        AuthenticationRepositoryImpl(get(), androidContext(), get(), get())
     }
 }

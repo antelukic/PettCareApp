@@ -1,6 +1,6 @@
-package com.pettcare.app.welcome
+package com.pettcare.app.welcome.presentation
 
-import com.pettcare.app.welcome.translations.WelcomeResources
+import com.pettcare.app.welcome.presentation.translations.WelcomeResources
 
 data class WelcomeScreenUIState(
     val welcomeMessage: String = "",

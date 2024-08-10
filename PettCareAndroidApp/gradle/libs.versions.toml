@@ -23,7 +23,7 @@ navigation-compose = "2.7.7"
 compose-icons-extended = "1.6.3"
 google-services = "4.4.1"
 google-services-maps = "18.2.0"
-firebase-storage = "20.3.0"
+firebase-bom = "33.1.2"
 google-services-maps-version = "2.0.1"
 maps-compose = "4.3.3"
 maps-compose-utils-version = "4.3.3"
@@ -31,6 +31,8 @@ accompanist-permissions-version = "0.25.0"
 play-services-location = "21.2.0"
 kotlinx-serialization-version = "1.6.3"
 places = "3.4.0"
+preferences = "1.1.1"
+google-gms-google-services-version = "4.4.2"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -69,7 +71,9 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 compose-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-icons-extended" }
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "google-services" }
-firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebase-storage" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-app-check = { group = "com.google.firebase", name = "firebase-appcheck-playintegrity" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "google-services-maps" }
 google-services-maps = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version.ref = "google-services-maps-version" }
 google-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose" }
@@ -77,8 +81,10 @@ accompanist-permissions = { group = "com.google.accompanist", name = "accompanis
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
 maps-utils-compose = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "maps-compose-utils-version" }
 maps-places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places"}
+shared-preferences = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferences"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "google-gms-google-services-version" }
 

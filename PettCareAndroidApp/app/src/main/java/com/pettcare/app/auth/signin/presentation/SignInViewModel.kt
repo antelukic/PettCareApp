@@ -10,7 +10,6 @@ import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.core.BaseViewModel
 import com.pettcare.app.extensions.EMPTY
 import com.pettcare.app.navigation.Router
-import kotlinx.coroutines.flow.map
 
 class SignInViewModel(
     private val getDateFromMillis: GetDateFromMillis,
@@ -21,19 +20,22 @@ class SignInViewModel(
 
     init {
         launchInIO {
-            signInUser.result().map(::mapSignInData)
+            signInUser.result().collect(::mapSignInData)
         }
     }
 
     private fun mapSignInData(data: SignInData) {
         when {
-            data.isSuccess -> publishNavigationAction {
-                // navigate to main screen
+            data.isSuccess -> publishNavigationAction { router ->
+                router.home()
             }
 
             data.isLoading -> updateUiState { state -> state.copy(isLoading = true) }
             data.errorType != null -> updateUiState { state ->
-                state.copy(errorMessage = data.errorType.errorMessage())
+                state.copy(
+                    errorMessage = data.errorType.errorMessage(),
+                    isLoading = false,
+                )
             }
         }
     }
@@ -91,10 +93,17 @@ class SignInViewModel(
         updateUiState { state -> state.copy(email = state.email.copy(text = value)) }
     }
 
+    private var isFirst = true
     fun onSubmit() {
         launchInIO {
             with(uiState.value) {
-                validateFields()
+                if (!validateFields() || isFirst) {
+                    isFirst = false
+                    return@launchInIO
+                }
+                updateUiState { state ->
+                    state.copy(isLoading = true)
+                }
                 signInUser.request(
                     SignInUserParams(
                         name = name.text,

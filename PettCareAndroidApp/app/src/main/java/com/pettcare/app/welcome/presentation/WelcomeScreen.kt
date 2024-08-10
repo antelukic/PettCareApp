@@ -1,4 +1,4 @@
-package com.pettcare.app.welcome
+package com.pettcare.app.welcome.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

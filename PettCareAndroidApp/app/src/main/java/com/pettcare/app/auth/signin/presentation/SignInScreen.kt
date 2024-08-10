@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -49,6 +50,7 @@ import com.pettcare.app.auth.sharedcomponents.Title
 import com.pettcare.app.uicomponents.PettCareInputField
 import com.pettcare.app.uicomponents.PettCareProceedButton
 import com.pettcare.app.uicomponents.PhotoPicker
+import com.pettcare.app.uicomponents.SpinningProgressBar
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -119,6 +121,13 @@ private fun SignInScreen(
         .fillMaxWidth()
         .padding(dimensionResource(id = R.dimen.spacing_4))
 
+    AnimatedVisibility(
+        visible = uiState.isLoading,
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        SpinningProgressBar()
+    }
+
     DatePicker(
         datePickerConfirmButtonTxt = uiState.datePickerConfirmButtonTxt,
         isDatePickerVisible = uiState.isDatePickerVisible,
@@ -186,12 +195,8 @@ private fun SignInScreen(
                 btnPreviousText = uiState.btnPreviousText,
                 btnNextText = uiState.btnNextText,
                 currentPage = pagerState.currentPage,
-                onBtnPreviousClick = {
-                    callbacks.onBtnPreviousClick
-                },
-                onBtnNextClick = {
-                    callbacks.onBtnNextClick
-                },
+                onBtnPreviousClick = callbacks.onBtnPreviousClick,
+                onBtnNextClick = callbacks.onBtnNextClick,
                 isLoading = uiState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
