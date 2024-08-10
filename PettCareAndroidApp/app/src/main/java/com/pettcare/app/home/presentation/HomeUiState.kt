@@ -18,4 +18,5 @@ data class PresentableProfiles(
     val price: String?,
     val location: LatLng,
     val address: String?,
+    val postPhotoUrl: String?,
 )

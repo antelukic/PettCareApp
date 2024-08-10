@@ -2,7 +2,7 @@ package com.pettcare.app.home.domain.model
 
 import com.google.android.gms.maps.model.LatLng
 
-data class CarePostProfile(
+data class CarePost(
     val id: String,
     val name: String,
     val photoUrl: String?,
@@ -10,4 +10,5 @@ data class CarePostProfile(
     val price: String?,
     val location: LatLng,
     val address: String?,
+    val postImageUrl: String?,
 )

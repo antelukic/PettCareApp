@@ -5,5 +5,5 @@ import com.pettcare.app.home.model.HomeRepositoryImpl
 import org.koin.dsl.module
 
 val homeModelModule = module {
-    single<HomeRepository> { HomeRepositoryImpl(get()) }
+    single<HomeRepository> { HomeRepositoryImpl(get(), get()) }
 }

@@ -12,29 +12,54 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import coil.compose.AsyncImage
 import com.pettcare.app.R
 import com.pettcare.app.auth.sharedcomponents.Title
 import com.pettcare.app.uicomponents.UserProfilePhoto
 import kotlinx.collections.immutable.ImmutableList
 
+private const val BUFFER = 2
+
 @Composable
 fun ListPage(
     profiles: ImmutableList<PresentableProfiles>,
     onProfileClicked: (String) -> Unit,
+    loadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(modifier) {
+    val listState = rememberLazyListState()
+
+    val reachedBottom: Boolean by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index != 0 && lastVisibleItem?.index == listState.layoutInfo.totalItemsCount - BUFFER
+        }
+    }
+
+    LaunchedEffect(reachedBottom) {
+        if (reachedBottom) loadMore()
+    }
+
+    LazyColumn(
+        state = listState,
+        modifier = modifier,
+    ) {
         item {
             Title(
                 title = stringResource(id = R.string.home_title),
@@ -50,6 +75,7 @@ fun ListPage(
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacing_4)))
             }
             CarePostProfile(
+                postImageUrl = profile.postPhotoUrl,
                 profilePicture = profile.photoUrl,
                 name = profile.name,
                 price = profile.price,
@@ -69,6 +95,7 @@ fun ListPage(
 
 @Composable
 fun CarePostProfile(
+    postImageUrl: String?,
     profilePicture: String?,
     name: String,
     price: String?,
@@ -112,6 +139,16 @@ fun CarePostProfile(
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
+            )
+
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_2)))
+
+            AsyncImage(
+                model = postImageUrl,
+                contentDescription = "Care post image",
+                modifier = Modifier
+                    .height(dimensionResource(id = R.dimen.care_post_image_height))
+                    .fillMaxWidth(),
             )
         }
     }

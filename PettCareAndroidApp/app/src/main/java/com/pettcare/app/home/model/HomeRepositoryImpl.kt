@@ -1,26 +1,26 @@
 package com.pettcare.app.home.model
 
 import com.google.android.gms.maps.model.LatLng
+import com.pettcare.app.core.BaseApiResponse
 import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.extensions.loadingOnStart
 import com.pettcare.app.home.domain.HomeRepository
-import com.pettcare.app.home.domain.model.CarePostProfile
+import com.pettcare.app.home.domain.model.CarePost
 import com.pettcare.app.home.domain.model.HomeData
-import com.pettcare.app.home.network.ApiCarePostProfile
-import com.pettcare.app.home.network.CarePostProfileApi
+import com.pettcare.app.home.network.response.CarePostResponseApi
+import com.pettcare.app.home.network.response.CarePostsResponseApi
+import com.pettcare.app.home.network.response.UserResponseApi
+import com.pettcare.app.home.network.service.CarePostService
+import com.pettcare.app.home.network.service.UserService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 
-private const val INITIAL_PAGE = 0
-private const val DEBOUNCE_TIME = 2000L
-
 internal class HomeRepositoryImpl(
-    private val carePostProfileApi: CarePostProfileApi,
+    private val carePostService: CarePostService,
+    private val userService: UserService,
 ) : HomeRepository {
 
     private val pagePublisher = MutableSharedFlow<Int>(1)
@@ -29,25 +29,41 @@ internal class HomeRepositoryImpl(
         pagePublisher.emit(value)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun result(): Flow<BaseResponse<HomeData>> = pagePublisher
         .mapLatest {
-            BaseResponse.Success(HomeData(carePostProfileApi.response().toDomainPosts()))
-        }.debounce(DEBOUNCE_TIME)
+            handleResponse(carePostService.carePosts(it.toString()))
+        }
         .loadingOnStart()
         .onStart {
-            publishPage(INITIAL_PAGE)
+            BaseResponse.Loading
         }
 
-    private fun List<ApiCarePostProfile>.toDomainPosts() = map { apiCarePostProfile ->
-        CarePostProfile(
-            photoUrl = apiCarePostProfile.photoUrl,
-            name = apiCarePostProfile.name,
-            price = apiCarePostProfile.price,
-            description = apiCarePostProfile.description,
-            address = apiCarePostProfile.address,
-            id = apiCarePostProfile.id,
-            location = LatLng(apiCarePostProfile.lat, apiCarePostProfile.lon),
-        )
+    private suspend fun handleResponse(response: BaseApiResponse<CarePostsResponseApi>?): BaseResponse<HomeData> {
+        if (response?.data == null) return BaseResponse.Error.Network
+        val userInformations = response.data.items.mapNotNull { getUserInformation(it.creatorId) }
+        val postsWithUserInfo = response.data.items.mapNotNull { post ->
+            userInformations.find { user -> user.id == post.creatorId }?.let { user ->
+                post to user
+            }
+        }
+        return BaseResponse.Success(getHomeData(postsWithUserInfo))
     }
+
+    private suspend fun getUserInformation(userId: String): UserResponseApi? = userService.getUserById(userId)?.data
+
+    private fun getHomeData(postsWithUserInfo: List<Pair<CarePostResponseApi, UserResponseApi>>) = HomeData(
+        profiles = postsWithUserInfo.map { (post, user) ->
+            CarePost(
+                id = post.id,
+                name = user.name,
+                photoUrl = user.photoUrl,
+                description = post.description,
+                price = post.price,
+                location = LatLng(post.lat, post.lon),
+                address = post.address,
+                postImageUrl = post.photoUrl,
+            )
+        },
+    )
 }

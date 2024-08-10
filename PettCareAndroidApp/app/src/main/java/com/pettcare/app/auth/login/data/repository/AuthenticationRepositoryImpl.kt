@@ -39,7 +39,7 @@ class AuthenticationRepositoryImpl(
         .mapLatest {
             val response = authService.login(it.toLoginRequestApi())
             if (response != null) {
-                storeUserInfo(response.data.id, response.data.authToken)
+                storeUserInfo(response.data?.id, response.data?.authToken)
                 BaseResponse.Success(true)
             } else {
                 BaseResponse.Error.Network
@@ -90,14 +90,16 @@ class AuthenticationRepositoryImpl(
     private suspend fun signInUser(params: DataSignInUserParams): BaseResponse<Boolean> {
         val response = authService.signIn(params.toApi())
         return if (response != null) {
-            storeUserInfo(response.data.id, response.data.authToken)
+            storeUserInfo(response.data?.id, response.data?.authToken)
             BaseResponse.Success(true)
         } else {
             BaseResponse.Error.Network
         }
     }
 
-    private fun storeUserInfo(userId: String, token: String) {
+    private fun storeUserInfo(userId: String?, token: String?) {
+        userId ?: return
+        token ?: return
         sharedPreferences.storeString(SharedPreferences.ID_KEY, userId)
         sharedPreferences.storeString(SharedPreferences.TOKEN_KEY, token)
     }
