@@ -32,6 +32,22 @@ internal class ProfileViewModel(
         launchInIO {
             getProfileData(page, id)
         }
+
+        launchInIO {
+            likeSocialPost.results.collect {
+                if (it is BaseResponse.Success) {
+                    getProfileData(page, id)
+                }
+            }
+        }
+
+        launchInIO {
+            postComment.results.collect {
+                if (it is BaseResponse.Success) {
+                    getProfileData(page, id)
+                }
+            }
+        }
     }
 
     fun likePost(postId: String) {

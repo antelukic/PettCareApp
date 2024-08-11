@@ -51,6 +51,11 @@ internal class ProfileRepositoryImpl(
             userService.getUserById(it.items.firstOrNull()?.userId.orEmpty())?.data
         }
         return comments.mapNotNull { comment ->
+            if (comment.items.isEmpty()) {
+                return posts.map {
+                    it to emptyList()
+                }
+            }
             val userInfo =
                 userInformations.find { it.id == comment.items.firstOrNull()?.userId } ?: return@mapNotNull null
             val post = posts.find { it.id == comment.items.firstOrNull()?.postId } ?: return@mapNotNull null
