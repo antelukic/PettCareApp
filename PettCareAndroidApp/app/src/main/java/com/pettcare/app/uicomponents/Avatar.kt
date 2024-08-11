@@ -31,6 +31,7 @@ fun Avatar(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.align(Alignment.CenterVertically),
+            color = MaterialTheme.colorScheme.onBackground,
         )
     }
 }
