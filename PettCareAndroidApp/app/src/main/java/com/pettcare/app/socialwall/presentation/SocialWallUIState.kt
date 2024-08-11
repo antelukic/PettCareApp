@@ -8,8 +8,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
-private typealias PostId = String
-
 data class SocialWallUIState(
     val posts: ImmutableList<PresentableSocialPost> = persistentListOf(),
     val comments: ImmutableList<PresentableSocialPostComment>? = null,
@@ -24,7 +22,7 @@ data class PresentableSocialPost(
     val numOfLikes: String,
     val numOfComments: String,
     val text: String?,
-    val comments: ImmutableList<PresentableSocialPostComment>,
+    val commentsToShow: ImmutableList<PresentableSocialPostComment>,
     val creatorId: String,
 )
 
@@ -37,14 +35,16 @@ fun List<SocialWallPost>.toPresentableSocialPost() = map {
         numOfLikes = it.numOfLikes,
         numOfComments = it.numOfComments,
         text = it.text,
-        comments = it.comments.map { comment -> comment.toPresentableSocialPostComment() }.toImmutableList(),
+        commentsToShow = it.comments.toPresentableSocialPostComments().toImmutableList(),
         creatorId = it.creatorId,
     )
 }.toImmutableList()
 
-fun SocialPostComment.toPresentableSocialPostComment() = PresentableSocialPostComment(
-    id = id,
-    name = name,
-    avatarUrl = avatarUrl,
-    text = text,
-)
+fun List<SocialPostComment>.toPresentableSocialPostComments() = map { comment ->
+    PresentableSocialPostComment(
+        id = comment.id,
+        name = comment.name,
+        avatarUrl = comment.avatarUrl,
+        text = comment.text,
+    )
+}

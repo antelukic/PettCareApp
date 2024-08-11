@@ -7,6 +7,7 @@ import com.pettcare.app.socialwall.domain.model.SocialWallPost
 import com.pettcare.app.socialwall.domain.usecase.GetSocialWallPost
 import com.pettcare.app.socialwall.domain.usecase.LikeSocialPost
 import com.pettcare.app.socialwall.domain.usecase.PostSocialPostComment
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 class SocialWallViewModel(
@@ -18,6 +19,7 @@ class SocialWallViewModel(
 
     private var shouldUpdatePage = true
     private var page = 0
+    private var postIdForCommentsShown: String? = null
 
     init {
         launchInIO {
@@ -26,6 +28,22 @@ class SocialWallViewModel(
 
         launchInIO {
             getSocialWallPost.publishPage(page)
+        }
+
+        launchInIO {
+            likeSocialPost.results.collect {
+                if (it is BaseResponse.Success) {
+                    getSocialWallPost.publishPage(page)
+                }
+            }
+        }
+
+        launchInIO {
+            postComment.results.collect {
+                if (it is BaseResponse.Success) {
+                    getSocialWallPost.publishPage(page)
+                }
+            }
         }
     }
 
@@ -36,8 +54,9 @@ class SocialWallViewModel(
     }
 
     fun showComments(postId: String) {
+        postIdForCommentsShown = postId
         updateUiState { state ->
-            state.copy(comments = state.posts.firstOrNull { it.id == postId }?.comments)
+            state.copy(comments = state.posts.firstOrNull { it.id == postId }?.commentsToShow)
         }
     }
 
@@ -61,7 +80,8 @@ class SocialWallViewModel(
 
     fun postComment() {
         launchInIO {
-            postComment(uiState.value.comment)
+            postComment.invoke(postIdForCommentsShown.orEmpty(), uiState.value.comment)
+            dismissComments()
         }
     }
 
@@ -79,12 +99,35 @@ class SocialWallViewModel(
                 shouldUpdatePage = response.data.isNotEmpty()
                 updateUiState { currentUiState ->
                     currentUiState.copy(
-                        posts = (currentUiState.posts + response.data.toPresentableSocialPost()).toImmutableList(),
+                        posts = updateState(currentUiState.posts, response.data.toPresentableSocialPost()),
                     )
                 }
             }
 
             else -> {}
         }
+    }
+
+    private fun updateState(
+        oldList: List<PresentableSocialPost>,
+        newList: List<PresentableSocialPost>,
+    ): ImmutableList<PresentableSocialPost> {
+        val listToReturn: MutableList<PresentableSocialPost> = mutableListOf()
+        // Update old posts if need to
+        oldList.forEach { oldPost ->
+            val newPost = newList.find { it.id == oldPost.id }
+            if (newPost == null) {
+                listToReturn.add(oldPost)
+            } else {
+                listToReturn.add(newPost)
+            }
+        }
+        // Add remaining posts
+        newList.forEach { post ->
+            if (listToReturn.find { it.id == post.id } == null) {
+                listToReturn.add(post)
+            }
+        }
+        return listToReturn.toImmutableList()
     }
 }

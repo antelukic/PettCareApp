@@ -2,12 +2,19 @@ package com.pettcare.app.socialwall.network
 
 import com.pettcare.app.core.BaseApiResponse
 import com.pettcare.app.sharedprefs.SharedPreferences
+import com.pettcare.app.socialwall.network.model.AddCommentRequestApi
+import com.pettcare.app.socialwall.network.model.AddCommentResponseApi
+import com.pettcare.app.socialwall.network.model.GetCommentsResponseApi
+import com.pettcare.app.socialwall.network.model.LikePostRequestApi
 import com.pettcare.app.socialwall.network.model.SocialWallPostsResponseApi
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 
 internal class SocialWallServiceImpl(
@@ -24,20 +31,45 @@ internal class SocialWallServiceImpl(
                 userId?.let {
                     parameter(USER_ID_PARAM, userId)
                 }
-                sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
-                    header("Authorization", "Bearer $token")
-                }
+                authorization(sharedPreferences)
             }.body() as BaseApiResponse<SocialWallPostsResponseApi>
         }.onFailure {
             it.printStackTrace()
         }.getOrNull()
 
-    override suspend fun likePost(postId: String) {
-        // implement once backend is ready
-    }
+    override suspend fun likePost(request: LikePostRequestApi): BaseApiResponse<Boolean>? = kotlin.runCatching {
+        client.post {
+            url(LIKE_POST)
+            authorization(sharedPreferences)
+            setBody(request)
+        }.body() as BaseApiResponse<Boolean>
+    }.onFailure { it.printStackTrace() }
+        .getOrNull()
 
-    override suspend fun postComment(comment: String) {
-        // implement once backend is ready
+    override suspend fun postComment(request: AddCommentRequestApi): BaseApiResponse<AddCommentResponseApi>? =
+        kotlin.runCatching {
+            client.post {
+                url(ADD_COMMENT)
+                authorization(sharedPreferences)
+                setBody(request)
+            }.body() as BaseApiResponse<AddCommentResponseApi>
+        }.onFailure { it.printStackTrace() }
+            .getOrNull()
+
+    override suspend fun getComments(postId: String): BaseApiResponse<GetCommentsResponseApi>? =
+        kotlin.runCatching {
+            client.get {
+                url(COMMENTS)
+                authorization(sharedPreferences)
+                parameter(COMMENTS_ID_PARAM, postId)
+            }.body() as BaseApiResponse<GetCommentsResponseApi>
+        }.onFailure { it.printStackTrace() }
+            .getOrNull()
+
+    private fun HttpRequestBuilder.authorization(sharedPreferences: SharedPreferences) {
+        sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
+            header("Authorization", "Bearer $token")
+        }
     }
 
     companion object {
@@ -46,5 +78,9 @@ internal class SocialWallServiceImpl(
         private const val PAGE_SIZE = "10"
         private const val PAGE_NUMBER_PARAM = "pageNumber"
         private const val USER_ID_PARAM = "userId"
+        private const val LIKE_POST = "/socialPost/like"
+        private const val ADD_COMMENT = "/comments/add"
+        private const val COMMENTS = "/comments"
+        private const val COMMENTS_ID_PARAM = "id"
     }
 }

@@ -4,5 +4,7 @@ import com.pettcare.app.socialwall.domain.repository.SocialWallRepository
 
 class PostSocialPostComment(private val repository: SocialWallRepository) {
 
-    suspend operator fun invoke(value: String) = repository.postComment(value)
+    val results = repository.postCommentResults()
+
+    suspend operator fun invoke(postId: String, value: String) = repository.postComment(postId, value)
 }
