@@ -5,5 +5,5 @@ import com.pettcare.app.core.BaseResponse
 
 class InitSession(private val chatRepository: ChatRepository) {
 
-    suspend operator fun invoke(username: String): BaseResponse<Unit> = chatRepository.initSession(username)
+    suspend operator fun invoke(userId: String): BaseResponse<Unit> = chatRepository.initSession(userId)
 }

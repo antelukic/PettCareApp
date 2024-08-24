@@ -29,7 +29,7 @@ fun PettCareInputField(
     placeHolderText: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    labelText: String? = null,
+    labelText: String? = placeHolderText,
     trailingIcon: @Composable (() -> Unit)? = null,
     labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     placeholderStyle: TextStyle = MaterialTheme.typography.bodyMedium,

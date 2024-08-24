@@ -108,6 +108,7 @@ dependencies {
     implementation(libs.maps.places)
     implementation(libs.shared.preferences)
     implementation(libs.androidx.ui.text.google.fonts)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

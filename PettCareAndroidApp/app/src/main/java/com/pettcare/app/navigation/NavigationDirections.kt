@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import com.pettcare.app.auth.login.presentation.LogInScreen
 import com.pettcare.app.auth.signin.presentation.SignInScreen
 import com.pettcare.app.chat.presentation.ChatScreen
+import com.pettcare.app.chat.presentation.userchats.UserChatsScreen
 import com.pettcare.app.create.presentation.PostType
 import com.pettcare.app.create.presentation.choosewhattocreate.ChooseWhatToCreateScreen
 import com.pettcare.app.create.presentation.createpost.CreatePostScreen
@@ -126,13 +127,24 @@ sealed class NavigationDirections {
         }
     }
 
-    object Chat {
+    object UserChats {
         val screen = object : NavigationDestination {
-            override val destination: String = "chat"
+            override val destination: String = "userChats"
 
             @Composable
             override fun Screen(modifier: Modifier, arguments: Any?) {
-                ChatScreen(modifier)
+                UserChatsScreen(modifier)
+            }
+        }
+    }
+
+    object Chat {
+        val screen = object : NavigationDestination {
+            override val destination: String = "chat/{userId}"
+
+            @Composable
+            override fun Screen(modifier: Modifier, arguments: Any?) {
+                ChatScreen((arguments as? String).orEmpty(), modifier)
             }
         }
     }

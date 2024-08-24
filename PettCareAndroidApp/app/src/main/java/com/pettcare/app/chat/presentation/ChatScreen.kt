@@ -41,13 +41,15 @@ import com.pettcare.app.R
 import com.pettcare.app.chat.domain.model.Message
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ChatScreen(
+    userId: String,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val viewModel = koinViewModel<ChatViewModel>()
+    val viewModel = koinViewModel<ChatViewModel>(parameters = { parametersOf(userId) })
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(key1 = true) {
@@ -70,7 +72,7 @@ fun ChatScreen(
     }
 
     ChatScreen(
-        username = viewModel.username,
+        username = viewModel.userName.value,
         messageText = viewModel.messageText.value,
         onMessageChange = viewModel::onMessageChange,
         onSendMessage = viewModel::sendMessage,

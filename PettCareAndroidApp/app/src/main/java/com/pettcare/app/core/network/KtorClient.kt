@@ -8,6 +8,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.accept
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -19,7 +20,7 @@ class KtorClient(
 ) {
 
     val client = HttpClient(CIO) {
-
+        install(WebSockets)
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {

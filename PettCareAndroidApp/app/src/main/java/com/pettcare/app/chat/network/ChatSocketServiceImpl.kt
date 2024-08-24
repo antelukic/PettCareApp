@@ -1,10 +1,12 @@
 package com.pettcare.app.chat.network
 
-import android.util.Log
+import com.pettcare.app.chat.network.model.InitSessionRequestApi
 import com.pettcare.app.chat.network.model.MessageApi
 import com.pettcare.app.core.BaseResponse
+import com.pettcare.app.sharedprefs.SharedPreferences
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
+import io.ktor.client.request.header
 import io.ktor.client.request.url
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
@@ -20,22 +22,32 @@ import kotlinx.serialization.json.Json
 
 internal class ChatSocketServiceImpl(
     private val client: HttpClient,
+    private val sharedPreferences: SharedPreferences,
 ) : ChatSocketService {
 
     private var socket: WebSocketSession? = null
 
-    override suspend fun initSession(username: String): BaseResponse<Unit> {
+    private var retry: Boolean = true
+
+    override suspend fun initSession(request: InitSessionRequestApi): BaseResponse<Unit> {
         return runCatching {
             socket = client.webSocketSession {
-                url("${ChatSocketService.Endpoints.ChatSocket.url}?username=$username")
+                url("ws://192.168.1.169:8081/message?chatId=${request.chatId}&senderId=${request.senderId}")
+                sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
+                    header("Authorization", "Bearer $token")
+                }
             }
             if (socket?.isActive == true) {
                 BaseResponse.Success(Unit)
             } else {
+                if (retry) {
+                    retry = false
+                    return initSession(request)
+                }
                 BaseResponse.Error.Network
             }
         }.onFailure {
-            Log.e("CHAT_SOCKET_SERVICE_IMPL", "initSession: error", it)
+            it.printStackTrace()
         }.getOrElse { BaseResponse.Error.Network }
     }
 
@@ -43,7 +55,7 @@ internal class ChatSocketServiceImpl(
         runCatching {
             socket?.send(Frame.Text(message))
         }.onFailure {
-            Log.e("CHAT_SOCKET_SERVICE_IMPL", "sendMessage: error", it)
+            it.printStackTrace()
         }
     }
 
@@ -57,7 +69,7 @@ internal class ChatSocketServiceImpl(
                     Json.decodeFromString<MessageApi>(json)
                 } ?: flow { }
         }.onFailure {
-            Log.e("CHAT_SOCKET_SERVICE_IMPL", "observeMessages: error", it)
+            it.printStackTrace()
         }.getOrElse {
             flow { emit(null) }
         }

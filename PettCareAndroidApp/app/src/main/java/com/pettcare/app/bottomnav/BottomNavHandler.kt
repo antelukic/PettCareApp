@@ -38,7 +38,7 @@ internal class BottomNavHandler(
                 bottomNavItemPublisher.tryEmit(BottomNavItem.CREATE)
             }
 
-            NavigationDirections.Chat.screen.destination -> {
+            NavigationDirections.UserChats.screen.destination -> {
                 bottomNavItemPublisher.tryEmit(BottomNavItem.CHAT)
             }
 
@@ -51,7 +51,7 @@ internal class BottomNavHandler(
             BottomNavItem.HOME -> router.home()
             BottomNavItem.SOCIAL_WALL -> router.socialWall()
             BottomNavItem.CREATE -> router.create()
-            BottomNavItem.CHAT -> router.messages()
+            BottomNavItem.CHAT -> router.userChats()
             BottomNavItem.PROFILE -> router.profile("")
         }
     }

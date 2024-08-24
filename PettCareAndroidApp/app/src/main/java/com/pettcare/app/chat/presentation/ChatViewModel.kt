@@ -2,8 +2,11 @@ package com.pettcare.app.chat.presentation
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.pettcare.app.chat.domain.model.Message
 import com.pettcare.app.chat.domain.usecase.CloseSession
+import com.pettcare.app.chat.domain.usecase.GetAllChatMessages
 import com.pettcare.app.chat.domain.usecase.GetAllMessages
+import com.pettcare.app.chat.domain.usecase.GetUserInfo
 import com.pettcare.app.chat.domain.usecase.InitSession
 import com.pettcare.app.chat.domain.usecase.SendMessage
 import com.pettcare.app.core.BaseResponse
@@ -16,13 +19,17 @@ import kotlinx.coroutines.flow.onEach
 
 class ChatViewModel(
     router: Router,
+    private val userId: String,
     private val getAllMessages: GetAllMessages,
     private val sendMessage: SendMessage,
     private val closeSession: CloseSession,
     private val initSession: InitSession,
+    private val getAllChatMessages: GetAllChatMessages,
+    private val getUserInfo: GetUserInfo,
 ) : BaseViewModel<ChatUiState>(router, ChatUiState()) {
 
-    val username = "test"
+    private val _userName = mutableStateOf("")
+    val userName: State<String> = _userName
 
     private val _messageText = mutableStateOf("")
     val messageText: State<String> = _messageText
@@ -31,9 +38,25 @@ class ChatViewModel(
     val toastEvent = _toastEvent.asSharedFlow()
 
     fun connectToChat() {
-        getAllChatMessages()
         launchInIO {
-            val result = initSession(username)
+            getUserInfo.invoke()
+        }
+        launchInIO {
+            getUserInfo.results.collectLatest { profileData ->
+                if (profileData is BaseResponse.Success) {
+                    _userName.value = profileData.data.name
+                }
+            }
+        }
+        launchInIO {
+            getAllChatMessages(userId)
+        }
+        launchInIO {
+            getAllChatMessages.results.collectLatest(::handleAllMessages)
+        }
+        getInitialChatMessages()
+        launchInIO {
+            val result = initSession(userId)
             when (result) {
                 is BaseResponse.Success -> {
                     launchInMain {
@@ -70,7 +93,7 @@ class ChatViewModel(
         }
     }
 
-    fun getAllChatMessages() {
+    private fun getInitialChatMessages() {
         launchInIO {
             updateUiState { state ->
                 state.copy(isLoading = true)
@@ -80,7 +103,7 @@ class ChatViewModel(
                     if (response is BaseResponse.Success) {
                         updateUiState { state ->
                             state.copy(
-                                messages = response.data,
+                                messages = emptyList(),
                                 isLoading = false,
                             )
                         }
@@ -94,6 +117,20 @@ class ChatViewModel(
             if (messageText.value.isNotBlank()) {
                 sendMessage(messageText.value)
             }
+        }
+    }
+
+    private suspend fun handleAllMessages(messages: BaseResponse<List<Message>>) {
+        if (messages is BaseResponse.Success) {
+            val newList = uiState.value.messages.toMutableList().apply {
+                addAll(0, messages.data)
+            }
+            updateUiState { state ->
+                state.copy(messages = newList)
+            }
+        }
+        if (messages is BaseResponse.Error) {
+            _toastEvent.emit("An error occured with our service. We apologize! Please try again later!")
         }
     }
 

@@ -4,13 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MessageApi(
-    @SerialName("text")
-    val text: String,
-    @SerialName("timestamp")
-    val timestamp: Long,
-    @SerialName("username")
-    val username: String,
+data class GetChatIdResponseApi(
     @SerialName("id")
     val id: String,
+    @SerialName("firstUserId")
+    val firstUserId: String,
+    @SerialName("secondUserId")
+    val secondUserId: String,
 )

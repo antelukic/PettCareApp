@@ -1,13 +1,15 @@
 package com.pettcare.app.sharedprefs
 
+import android.annotation.SuppressLint
 import android.content.Context
 
 class SharedPreferences(context: Context) {
 
     private val sharedPrefs = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
 
+    @SuppressLint("ApplySharedPref")
     fun storeString(key: String, value: String) {
-        sharedPrefs.edit().putString(key, value).apply()
+        sharedPrefs.edit().putString(key, value).commit()
     }
 
     fun getString(key: String, defaultValue: String? = null) = sharedPrefs.getString(key, defaultValue)
