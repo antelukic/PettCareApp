@@ -11,7 +11,7 @@ import com.pettcare.app.home.network.response.CarePostResponseApi
 import com.pettcare.app.home.network.response.CarePostsResponseApi
 import com.pettcare.app.home.network.response.UserResponseApi
 import com.pettcare.app.home.network.service.CarePostService
-import com.pettcare.app.home.network.service.UserService
+import com.pettcare.app.profile.network.UserService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -63,6 +63,7 @@ internal class HomeRepositoryImpl(
                 location = LatLng(post.lat, post.lon),
                 address = post.address,
                 postImageUrl = post.photoUrl,
+                creatorId = user.id,
             )
         },
     )

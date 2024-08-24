@@ -84,7 +84,7 @@ fun ListPage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(dimensionResource(id = R.dimen.spacing_4))
-                    .clickable { onProfileClicked(profile.id) },
+                    .clickable { onProfileClicked(profile.creatorId) },
             )
             if (index == profiles.lastIndex) {
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacing_10)))

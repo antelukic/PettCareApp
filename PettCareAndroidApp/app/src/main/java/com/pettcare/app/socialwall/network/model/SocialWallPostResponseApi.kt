@@ -1,5 +1,7 @@
 package com.pettcare.app.socialwall.network.model
 
+import com.pettcare.app.home.network.response.UserResponseApi
+import com.pettcare.app.socialwall.domain.model.SocialWallPost
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -19,4 +21,16 @@ data class SocialWallPostResponseApi(
     val photoUrl: String?,
     @SerialName("text")
     val text: String?,
+)
+
+fun SocialWallPostResponseApi.toDomain(userInfo: UserResponseApi) = SocialWallPost(
+    id = id,
+    creatorName = userInfo.name,
+    avatarUrl = userInfo.photoUrl,
+    photoUrl = photoUrl,
+    numOfLikes = "30",
+    numOfComments = "20",
+    text = text,
+    comments = listOf(),
+    creatorId = userInfo.id,
 )

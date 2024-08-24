@@ -11,4 +11,5 @@ data class CarePost(
     val location: LatLng,
     val address: String?,
     val postImageUrl: String?,
+    val creatorId: String,
 )

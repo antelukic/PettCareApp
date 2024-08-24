@@ -9,4 +9,5 @@ data class SocialWallPost(
     val numOfComments: String,
     val text: String?,
     val comments: List<SocialPostComment>,
+    val creatorId: String,
 )

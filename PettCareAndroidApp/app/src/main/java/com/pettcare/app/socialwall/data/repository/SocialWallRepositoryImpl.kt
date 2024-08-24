@@ -4,17 +4,17 @@ import com.pettcare.app.core.BaseApiResponse
 import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.extensions.loadingOnStart
 import com.pettcare.app.home.network.response.UserResponseApi
-import com.pettcare.app.home.network.service.UserService
+import com.pettcare.app.profile.network.UserService
 import com.pettcare.app.socialwall.domain.model.SocialWallPost
 import com.pettcare.app.socialwall.domain.repository.SocialWallRepository
 import com.pettcare.app.socialwall.network.SocialWallService
 import com.pettcare.app.socialwall.network.model.SocialWallPostResponseApi
 import com.pettcare.app.socialwall.network.model.SocialWallPostsResponseApi
+import com.pettcare.app.socialwall.network.model.toDomain
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.onStart
 
 internal class SocialWallRepositoryImpl(
     private val socialWallService: SocialWallService,
@@ -32,9 +32,6 @@ internal class SocialWallRepositoryImpl(
         pageAndUserIdPublisher.mapLatest { (page, userId) ->
             handleResponse(socialWallService.results(page, userId))
         }.loadingOnStart()
-            .onStart {
-                publishPage(0)
-            }
 
     override suspend fun likePost(postId: String) = socialWallService.likePost(postId)
 
@@ -57,15 +54,6 @@ internal class SocialWallRepositoryImpl(
 
     private fun getSocialWallData(postsWithUserInfo: List<Pair<SocialWallPostResponseApi, UserResponseApi>>) =
         postsWithUserInfo.map { (post, userInfo) ->
-            SocialWallPost(
-                id = post.id,
-                creatorName = userInfo.name,
-                avatarUrl = userInfo.photoUrl,
-                photoUrl = post.photoUrl,
-                numOfLikes = "30",
-                numOfComments = "20",
-                text = post.text,
-                comments = listOf(),
-            )
+            post.toDomain(userInfo)
         }
 }

@@ -1,9 +1,9 @@
 package com.pettcare.app.profile.network.di
 
-import com.pettcare.app.profile.network.ApiProfile
-import com.pettcare.app.profile.network.ApiProfileImpl
+import com.pettcare.app.profile.network.UserService
+import com.pettcare.app.profile.network.UserServiceImpl
 import org.koin.dsl.module
 
 val profileNetworkModule = module {
-    factory<ApiProfile> { ApiProfileImpl() }
+    factory<UserService> { UserServiceImpl(get(), get()) }
 }

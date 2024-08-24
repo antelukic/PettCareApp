@@ -107,7 +107,7 @@ fun SocialWallScreen(
         items(uiState.posts) { post ->
             SocialWallPost(
                 post = post,
-                onProfileClick = { onProfileClick(post.id) },
+                onProfileClick = { onProfileClick(post.creatorId) },
                 onLikeClick = { onLikeClick(post.id) },
                 onCommentsClick = { onCommentsClick(post.id) },
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.spacing_4)),

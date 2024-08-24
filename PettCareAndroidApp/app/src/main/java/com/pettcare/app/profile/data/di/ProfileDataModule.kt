@@ -5,5 +5,5 @@ import com.pettcare.app.profile.domain.repository.ProfileRepository
 import org.koin.dsl.module
 
 val profileDataModule = module {
-    factory<ProfileRepository> { ProfileRepositoryImpl(get(), get()) }
+    factory<ProfileRepository> { ProfileRepositoryImpl(get(), get(), get()) }
 }
