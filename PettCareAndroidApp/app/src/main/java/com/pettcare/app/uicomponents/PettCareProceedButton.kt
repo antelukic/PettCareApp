@@ -40,6 +40,7 @@ fun PettCareProceedButton(
                 Text(
                     text = text,
                     style = textStyle,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
         }

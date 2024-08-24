@@ -26,7 +26,7 @@ import com.pettcare.app.bottomnav.BottomNavItemSelectedObserver
 import com.pettcare.app.bottomnav.BottomNavSelectedPublisher
 import com.pettcare.app.bottomnav.BottomNavigation
 import com.pettcare.app.navigation.NavigationComponent
-import com.pettcare.app.ui.theme.MyApplicationTheme
+import com.pettcare.app.ui.theme.AppTheme
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
             PlayIntegrityAppCheckProviderFactory.getInstance(),
         )
         setContent {
-            MyApplicationTheme {
+            AppTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
