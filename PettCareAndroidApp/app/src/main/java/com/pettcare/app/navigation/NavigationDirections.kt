@@ -11,7 +11,7 @@ import com.pettcare.app.create.presentation.createpost.CreatePostScreen
 import com.pettcare.app.home.presentation.HomeScreen
 import com.pettcare.app.profile.presentation.ProfileScreen
 import com.pettcare.app.socialwall.presentation.SocialWallScreen
-import com.pettcare.app.welcome.WelcomeScreen
+import com.pettcare.app.welcome.presentation.WelcomeScreen
 
 sealed class NavigationDirections {
     object Welcome {

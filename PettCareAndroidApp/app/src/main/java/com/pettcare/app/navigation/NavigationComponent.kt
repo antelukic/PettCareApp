@@ -24,7 +24,7 @@ fun NavigationComponent(
     HandleNavigation(navController = navController)
     NavHost(
         navController = navController,
-        startDestination = NavigationDirections.Home.screen.destination,
+        startDestination = NavigationDirections.Welcome.screen.destination,
         modifier = modifier,
     ) {
         val screenModifier = Modifier.fillMaxSize()

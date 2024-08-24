@@ -49,6 +49,11 @@ class LoginViewModel(
                 isLoginButtonEnabled = data.errorType != null,
             )
         }
+        if (data.isSuccess) {
+            publishNavigationAction { router ->
+                router.home()
+            }
+        }
     }
 
     private fun BaseResponse.Error?.errorMessage() = when (this) {

@@ -60,4 +60,6 @@
     <string name="location_example">Vukovarska 11, Osijek Croatia</string>
     <string name="post_button_text">Post</string>
     <string name="choose_what_to_create_title">Choose what post you would like to create</string>
+    <string name="log_in_email_label">Email:</string>
+    <string name="log_in_password_label">Password:</string>
 </resources>

@@ -11,5 +11,6 @@ plugins {
     alias(libs.plugins.kotlinAndroid) apply false
         kotlin("jvm") version "1.9.0"
         kotlin("plugin.serialization") version "1.9.22"
+    alias(libs.plugins.googleGmsGoogleServices) apply false
 }
 true // Needed to make the Suppress annotation work for the plugins block
