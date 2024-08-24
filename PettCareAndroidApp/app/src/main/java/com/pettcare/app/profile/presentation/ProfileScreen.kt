@@ -86,6 +86,7 @@ private fun ProfileScreen(
             onCommentsClick = onShowComments,
             onUpdateComment = onCommentTextChanged,
             onPostComment = onPostComment,
+            loadMore = {},
             title = stringResource(id = R.string.social_wall_title_profile),
         )
     }

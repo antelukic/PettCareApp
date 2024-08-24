@@ -3,9 +3,11 @@ package com.pettcare.app.socialwall.presentation
 import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.core.BaseViewModel
 import com.pettcare.app.navigation.Router
+import com.pettcare.app.socialwall.domain.model.SocialWallPost
 import com.pettcare.app.socialwall.domain.usecase.GetSocialWallPost
 import com.pettcare.app.socialwall.domain.usecase.LikeSocialPost
 import com.pettcare.app.socialwall.domain.usecase.PostSocialPostComment
+import kotlinx.collections.immutable.toImmutableList
 
 class SocialWallViewModel(
     private val getSocialWallPost: GetSocialWallPost,
@@ -14,21 +16,16 @@ class SocialWallViewModel(
     router: Router,
 ) : BaseViewModel<SocialWallUIState>(router, SocialWallUIState()) {
 
+    private var shouldUpdatePage = true
+    private var page = 0
+
     init {
         launchInIO {
-            getSocialWallPost.results().collect { response ->
-                when (response) {
-                    is BaseResponse.Success -> {
-                        updateUiState { currentUiState ->
-                            currentUiState.copy(
-                                posts = response.data.toPresentableSocialPost(),
-                            )
-                        }
-                    }
+            getSocialWallPost.results().collect(::handleResult)
+        }
 
-                    else -> {}
-                }
-            }
+        launchInIO {
+            getSocialWallPost.publishPage(page)
         }
     }
 
@@ -65,6 +62,29 @@ class SocialWallViewModel(
     fun postComment() {
         launchInIO {
             postComment(uiState.value.comment)
+        }
+    }
+
+    fun nextPage() {
+        launchInIO {
+            if (shouldUpdatePage.not()) return@launchInIO
+            page++
+            getSocialWallPost.publishPage(page)
+        }
+    }
+
+    private fun handleResult(response: BaseResponse<List<SocialWallPost>>) {
+        when (response) {
+            is BaseResponse.Success -> {
+                shouldUpdatePage = response.data.isNotEmpty()
+                updateUiState { currentUiState ->
+                    currentUiState.copy(
+                        posts = (currentUiState.posts + response.data.toPresentableSocialPost()).toImmutableList(),
+                    )
+                }
+            }
+
+            else -> {}
         }
     }
 }

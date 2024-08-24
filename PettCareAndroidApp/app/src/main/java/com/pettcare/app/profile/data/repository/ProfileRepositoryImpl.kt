@@ -19,7 +19,7 @@ internal class ProfileRepositoryImpl(
 
     override suspend fun getProfileById(id: String): Flow<BaseResponse<ProfileData>> = combine(
         getProfileInformation(id),
-        socialWallRepository.getPostsById(id),
+        socialWallRepository.results(),
     ) { profileApi, posts ->
         if (posts is BaseResponse.Success && profileApi is BaseResponse.Success) {
             BaseResponse.Success(buildProfileData(profileApi.data, posts.data))
