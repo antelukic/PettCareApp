@@ -1,12 +1,10 @@
-package com.pettcare.app.home.network
+package com.pettcare.app.home.network.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiCarePostProfile(
-    @SerialName("name")
-    val name: String,
+data class CarePostResponseApi(
     @SerialName("id")
     val id: String,
     @SerialName("photoUrl")
@@ -21,4 +19,12 @@ data class ApiCarePostProfile(
     val lon: Double,
     @SerialName("address")
     val address: String,
+    @SerialName("creatorId")
+    val creatorId: String,
+)
+
+@Serializable
+data class CarePostsResponseApi(
+    @SerialName("items")
+    val items: List<CarePostResponseApi>,
 )

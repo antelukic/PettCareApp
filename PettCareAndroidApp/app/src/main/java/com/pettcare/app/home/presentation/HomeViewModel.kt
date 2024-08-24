@@ -3,7 +3,8 @@ package com.pettcare.app.home.presentation
 import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.core.BaseViewModel
 import com.pettcare.app.home.domain.GetHomeData
-import com.pettcare.app.home.domain.model.CarePostProfile
+import com.pettcare.app.home.domain.model.CarePost
+import com.pettcare.app.home.domain.model.HomeData
 import com.pettcare.app.home.presentation.cluster.MapsMarkerCluster
 import com.pettcare.app.navigation.Router
 import kotlinx.collections.immutable.toImmutableList
@@ -14,30 +15,40 @@ class HomeViewModel(
     initialViewState: HomeUiState = HomeUiState(),
 ) : BaseViewModel<HomeUiState>(router, initialViewState) {
 
+    private var page = 0
+
+    init {
+        launchInIO { getHomeData.results().collect(::handleResults) }
+        launchInIO { getHomeData.publishPage(page) }
+    }
+
     fun onProfileClicked(id: String) {
         publishNavigationAction {
             it.profile(id)
         }
     }
 
-    init {
+    fun nextPage() {
         launchInIO {
-            getHomeData.results().collect { response ->
-                when (response) {
-                    is BaseResponse.Loading -> {}
-                    is BaseResponse.Error -> {}
-                    is BaseResponse.Success -> updateUiState {
-                        it.copy(
-                            profiles = response.data.profiles.toPresentableProfiles(),
-                            markers = response.data.profiles.toMapMarkers(),
-                        )
-                    }
-                }
+            page++
+            getHomeData.publishPage(page)
+        }
+    }
+
+    private fun handleResults(response: BaseResponse<HomeData>) {
+        when (response) {
+            is BaseResponse.Loading -> {}
+            is BaseResponse.Error -> {}
+            is BaseResponse.Success -> updateUiState { state ->
+                state.copy(
+                    profiles = (state.profiles + response.data.profiles.toPresentableProfiles()).toImmutableList(),
+                    markers = (state.markers + response.data.profiles.toMapMarkers()).toImmutableList(),
+                )
             }
         }
     }
 
-    private fun List<CarePostProfile>.toPresentableProfiles() = map {
+    private fun List<CarePost>.toPresentableProfiles() = map {
         PresentableProfiles(
             id = it.id,
             name = it.name,
@@ -46,10 +57,11 @@ class HomeViewModel(
             price = it.price,
             location = it.location,
             address = it.address,
+            postPhotoUrl = it.postImageUrl,
         )
     }.toImmutableList()
 
-    private fun List<CarePostProfile>.toMapMarkers() = map {
+    private fun List<CarePost>.toMapMarkers() = map {
         MapsMarkerCluster(
             id = it.id,
             itemPosition = it.location,

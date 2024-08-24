@@ -51,6 +51,7 @@ fun HomeScreen(
                 ListPage(
                     profiles = uiState.profiles,
                     onProfileClicked = viewModel::onProfileClicked,
+                    loadMore = viewModel::nextPage,
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {
