@@ -2,10 +2,9 @@ package com.pettcare.app.create.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.UUID
 
 @Serializable
-data class CarePostParamsApi(
+data class CreateCarePostRequestApi(
     @SerialName("description")
     val description: String,
     @SerialName("lat")
@@ -14,8 +13,8 @@ data class CarePostParamsApi(
     val lon: Double,
     @SerialName("address")
     val address: String,
-    @SerialName("id")
-    val id: String = UUID.randomUUID().toString(),
+    @SerialName("creatorId")
+    val creatorId: String = "",
     @SerialName("price")
     val price: String?,
     @SerialName("photoUrl")

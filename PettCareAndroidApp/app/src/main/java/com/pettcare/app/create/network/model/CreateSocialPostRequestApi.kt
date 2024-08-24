@@ -2,16 +2,15 @@
 
 package com.pettcare.app.create.network.model
 
-import java.util.UUID
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SocialPostParamsApi(
+data class CreateSocialPostRequestApi(
     @SerialName("text")
     val text: String?,
-    @SerialName("id")
-    val id: String = UUID.randomUUID().toString(),
+    @SerialName("creatorId")
+    val creatorId: String = "",
     @SerialName("photoUrl")
     val photoUrl: String?,
     @SerialName("photoId")
