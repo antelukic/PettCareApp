@@ -53,6 +53,7 @@ internal class ChatRepositoryImpl(
 
     override suspend fun closeSession() = chatSocketService.closeSession()
 
+    @Suppress("ReturnCount")
     override suspend fun initSession(userId: String): BaseResponse<Unit> {
         val currentUserId = sharedPreferences.getString(SharedPreferences.ID_KEY, null)
             ?: return BaseResponse.Error.Other
@@ -63,7 +64,7 @@ internal class ChatRepositoryImpl(
                 senderId = userId,
                 text = "",
                 chatId = chatId.data?.id.orEmpty(),
-            )
+            ),
         )
     }
 
@@ -122,6 +123,7 @@ internal class ChatRepositoryImpl(
         }
     }
 
+    @Suppress("ReturnCount")
     private suspend fun getAllUserMessages(receiverId: String): BaseResponse<List<Message>> {
         val currentUserId = sharedPreferences.getString(SharedPreferences.ID_KEY, null)
             ?: return BaseResponse.Error.Other

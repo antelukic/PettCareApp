@@ -7,8 +7,6 @@ import com.pettcare.app.sharedprefs.SharedPreferences
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.header
-import io.ktor.client.request.parameter
-import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
@@ -34,15 +32,15 @@ internal class ChatSocketServiceImpl(
     override suspend fun initSession(request: InitSessionRequestApi): BaseResponse<Unit> {
         return runCatching {
             socket = client.webSocketSession {
-                url("${ChatSocketService.Endpoints.ChatSocket.url}?chatId=${request.chatId}&senderId=${request.senderId}")
-//                sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
-//                    header("Authorization", "Bearer $token")
-//                }
+                url("ws://192.168.1.169:8081/message?chatId=${request.chatId}&senderId=${request.senderId}")
+                sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
+                    header("Authorization", "Bearer $token")
+                }
             }
             if (socket?.isActive == true) {
                 BaseResponse.Success(Unit)
             } else {
-                if(retry) {
+                if (retry) {
                     retry = false
                     return initSession(request)
                 }

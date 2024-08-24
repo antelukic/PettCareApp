@@ -1,6 +1,5 @@
 package com.pettcare.app.chat.network
 
-import com.pettcare.app.chat.domain.model.Message
 import com.pettcare.app.chat.network.model.GetChatIdRequestApi
 import com.pettcare.app.chat.network.model.GetChatIdResponseApi
 import com.pettcare.app.chat.network.model.MessageApi

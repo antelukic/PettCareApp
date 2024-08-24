@@ -8,5 +8,5 @@ data class GetChatIdRequestApi(
     @SerialName("firstUserId")
     val firstUserId: String,
     @SerialName("secondUserId")
-    val secondUserId: String
+    val secondUserId: String,
 )

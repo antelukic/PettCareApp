@@ -70,7 +70,7 @@ fun NavigationComponent(
             NavigationDirections.Chat.screen.Screen(
                 modifier = screenModifier,
                 arguments = backstackEntry.arguments?.getString("userId"),
-                )
+            )
         }
         composable(NavigationDirections.UserChats.screen.destination) {
             NavigationDirections.UserChats.screen.Screen(modifier = screenModifier, arguments = null)
