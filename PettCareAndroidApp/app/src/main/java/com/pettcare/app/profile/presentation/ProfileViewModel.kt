@@ -9,6 +9,7 @@ import com.pettcare.app.socialwall.domain.usecase.LikeSocialPost
 import com.pettcare.app.socialwall.domain.usecase.PostSocialPostComment
 import com.pettcare.app.socialwall.presentation.PresentableSocialPost
 import com.pettcare.app.socialwall.presentation.toPresentableSocialPost
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 internal class ProfileViewModel(
@@ -21,6 +22,7 @@ internal class ProfileViewModel(
 
     private var shouldLoadNextPage = true
     private var page = 0
+    private var postIdOfOpenComments: String? = null
 
     init {
         launchInIO {
@@ -39,8 +41,9 @@ internal class ProfileViewModel(
     }
 
     fun showComments(postId: String) {
+        postIdOfOpenComments = postId
         updateUiState { state ->
-            state.copy(comments = state.posts.firstOrNull { it.id == postId }?.comments)
+            state.copy(comments = state.posts.firstOrNull { it.id == postId }?.commentsToShow)
         }
     }
 
@@ -58,7 +61,8 @@ internal class ProfileViewModel(
 
     fun postComment() {
         launchInIO {
-            postComment(uiState.value.comment)
+            postComment(postIdOfOpenComments.orEmpty(), uiState.value.comment)
+            dismissComments()
         }
     }
 
@@ -88,6 +92,29 @@ internal class ProfileViewModel(
         photoUrl = photoUrl,
         dateOfBirth = dateOfBirth,
         email = email,
-        posts = (oldPosts + posts.toPresentableSocialPost()).toImmutableList(),
+        posts = updateState(oldPosts, posts.toPresentableSocialPost()),
     )
+
+    private fun updateState(
+        oldList: List<PresentableSocialPost>,
+        newList: List<PresentableSocialPost>,
+    ): ImmutableList<PresentableSocialPost> {
+        val listToReturn: MutableList<PresentableSocialPost> = mutableListOf()
+        // Update old posts if need to
+        oldList.forEach { oldPost ->
+            val newPost = newList.find { it.id == oldPost.id }
+            if (newPost == null) {
+                listToReturn.add(oldPost)
+            } else {
+                listToReturn.add(newPost)
+            }
+        }
+        // Add remaining posts
+        newList.forEach { post ->
+            if (listToReturn.find { it.id == post.id } == null) {
+                listToReturn.add(post)
+            }
+        }
+        return listToReturn.toImmutableList()
+    }
 }

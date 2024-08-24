@@ -7,6 +7,7 @@ import com.pettcare.app.profile.domain.model.ProfileData
 import com.pettcare.app.profile.domain.repository.ProfileRepository
 import com.pettcare.app.profile.network.UserService
 import com.pettcare.app.sharedprefs.SharedPreferences
+import com.pettcare.app.socialwall.domain.model.SocialPostComment
 import com.pettcare.app.socialwall.network.SocialWallService
 import com.pettcare.app.socialwall.network.model.SocialWallPostResponseApi
 import com.pettcare.app.socialwall.network.model.toDomain
@@ -36,11 +37,34 @@ internal class ProfileRepositoryImpl(
     override fun results(): Flow<BaseResponse<ProfileData>> =
         profileIdResults.mapLatest { (posts, profileApi) ->
             if (posts?.data != null && profileApi is BaseResponse.Success) {
-                BaseResponse.Success(buildProfileData(profileApi.data, posts.data.items))
+                BaseResponse.Success(buildProfileData(profileApi.data, getCommentsPerPosts(posts.data.items)))
             } else {
                 BaseResponse.Error.Network
             }
         }.loadingOnStart()
+
+    private suspend fun getCommentsPerPosts(
+        posts: List<SocialWallPostResponseApi>,
+    ): List<Pair<SocialWallPostResponseApi, List<SocialPostComment>>> {
+        val comments = posts.mapNotNull { socialPostService.getComments(it.id)?.data }
+        val userInformations = comments.mapNotNull {
+            userService.getUserById(it.items.firstOrNull()?.userId.orEmpty())?.data
+        }
+        return comments.mapNotNull { comment ->
+            val userInfo =
+                userInformations.find { it.id == comment.items.firstOrNull()?.userId } ?: return@mapNotNull null
+            val post = posts.find { it.id == comment.items.firstOrNull()?.postId } ?: return@mapNotNull null
+            val socialPostComments = comment.items.map {
+                SocialPostComment(
+                    id = it.id,
+                    name = userInfo.name,
+                    avatarUrl = userInfo.photoUrl,
+                    text = it.text,
+                )
+            }
+            post to socialPostComments
+        }
+    }
 
     override suspend fun getProfileById(page: Int, id: String) {
         idWithPagePublisher.emit(page to id)
@@ -51,13 +75,18 @@ internal class ProfileRepositoryImpl(
             BaseResponse.Success(response)
         } ?: BaseResponse.Error.Network
 
-    private fun buildProfileData(profileApi: UserResponseApi, posts: List<SocialWallPostResponseApi>) = ProfileData(
+    private fun buildProfileData(
+        profileApi: UserResponseApi,
+        posts: List<Pair<SocialWallPostResponseApi, List<SocialPostComment>>>,
+    ) = ProfileData(
         id = profileApi.id,
         name = profileApi.name,
         email = profileApi.email,
         photoUrl = profileApi.photoUrl,
         gender = profileApi.gender,
         dateOfBirth = profileApi.dateOfBirth,
-        posts = posts.map { it.toDomain(profileApi) },
+        posts = posts.map { (post, comments) ->
+            post.toDomain(profileApi, comments)
+        },
     )
 }

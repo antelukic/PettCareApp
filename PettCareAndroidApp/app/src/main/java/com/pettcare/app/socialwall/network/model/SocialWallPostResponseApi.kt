@@ -1,6 +1,7 @@
 package com.pettcare.app.socialwall.network.model
 
 import com.pettcare.app.home.network.response.UserResponseApi
+import com.pettcare.app.socialwall.domain.model.SocialPostComment
 import com.pettcare.app.socialwall.domain.model.SocialWallPost
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -21,16 +22,18 @@ data class SocialWallPostResponseApi(
     val photoUrl: String?,
     @SerialName("text")
     val text: String?,
+    @SerialName("numOfLikes")
+    val numOfLikes: Int,
 )
 
-fun SocialWallPostResponseApi.toDomain(userInfo: UserResponseApi) = SocialWallPost(
+fun SocialWallPostResponseApi.toDomain(userInfo: UserResponseApi, comments: List<SocialPostComment>) = SocialWallPost(
     id = id,
     creatorName = userInfo.name,
     avatarUrl = userInfo.photoUrl,
     photoUrl = photoUrl,
-    numOfLikes = "30",
-    numOfComments = "20",
+    numOfLikes = numOfLikes.toString(),
+    numOfComments = comments.count().toString(),
     text = text,
-    comments = listOf(),
+    comments = comments,
     creatorId = userInfo.id,
 )
