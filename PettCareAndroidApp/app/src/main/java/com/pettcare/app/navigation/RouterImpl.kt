@@ -32,8 +32,8 @@ internal class RouterImpl(
         navigationPublisher.publish(NavigationDirections.ChooseWhatToCreate.screen, null)
     }
 
-    override fun messages() {
-        navigationPublisher.publish(NavigationDirections.Chat.screen, null)
+    override fun messages(userId: String) {
+        navigationPublisher.publish(NavigationDirections.Chat.screen, userId)
     }
 
     override fun profile(profileId: String?) {
@@ -46,5 +46,9 @@ internal class RouterImpl(
         postTypeId?.let {
             navigationPublisher.publish(NavigationDirections.CreatePost.screen, postTypeId)
         }
+    }
+
+    override fun userChats() {
+        navigationPublisher.publish(NavigationDirections.UserChats.screen, null)
     }
 }

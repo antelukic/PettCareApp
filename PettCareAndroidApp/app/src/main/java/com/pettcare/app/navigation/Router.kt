@@ -1,5 +1,6 @@
 package com.pettcare.app.navigation
 
+@Suppress("TooManyFunctions")
 interface Router {
 
     fun welcomeScreen()
@@ -16,9 +17,11 @@ interface Router {
 
     fun create()
 
-    fun messages()
+    fun messages(userId: String)
 
     fun profile(profileId: String?)
 
     fun createPost(postTypeId: String?)
+
+    fun userChats()
 }
