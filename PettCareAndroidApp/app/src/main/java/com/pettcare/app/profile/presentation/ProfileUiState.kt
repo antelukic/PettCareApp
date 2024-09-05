@@ -15,4 +15,5 @@ data class ProfileUiState(
     val posts: ImmutableList<PresentableSocialPost> = persistentListOf(),
     val comments: ImmutableList<PresentableSocialPostComment>? = null,
     val comment: String = EMPTY,
+    val showLogout: Boolean = false,
 )

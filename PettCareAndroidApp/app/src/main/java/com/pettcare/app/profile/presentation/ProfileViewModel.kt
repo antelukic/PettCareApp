@@ -5,6 +5,8 @@ import com.pettcare.app.core.BaseViewModel
 import com.pettcare.app.navigation.Router
 import com.pettcare.app.profile.domain.model.ProfileData
 import com.pettcare.app.profile.domain.usecase.GetProfileData
+import com.pettcare.app.profile.domain.usecase.SignOut
+import com.pettcare.app.sharedprefs.SharedPreferences
 import com.pettcare.app.socialwall.domain.usecase.LikeSocialPost
 import com.pettcare.app.socialwall.domain.usecase.PostSocialPostComment
 import com.pettcare.app.socialwall.presentation.PresentableSocialPost
@@ -16,7 +18,9 @@ internal class ProfileViewModel(
     private val getProfileData: GetProfileData,
     private val likeSocialPost: LikeSocialPost,
     private val postComment: PostSocialPostComment,
+    private val signOut: SignOut,
     private val id: String,
+    private val sharedPreferences: SharedPreferences,
     router: Router,
 ) : BaseViewModel<ProfileUiState>(router, ProfileUiState()) {
 
@@ -48,6 +52,11 @@ internal class ProfileViewModel(
                 }
             }
         }
+    }
+
+    fun signOut() {
+        this.signOut.invoke()
+        publishNavigationAction(Router::welcomeScreen)
     }
 
     fun likePost(postId: String) {
@@ -91,10 +100,11 @@ internal class ProfileViewModel(
     }
 
     private fun handleResponse(response: BaseResponse<ProfileData>) {
+        val userId = sharedPreferences.getString(SharedPreferences.ID_KEY)
         when (response) {
             is BaseResponse.Success -> {
                 updateUiState { state ->
-                    response.data.toUiState(state.posts)
+                    response.data.toUiState(state.posts, currentUserId = userId.orEmpty())
                 }
             }
 
@@ -102,13 +112,17 @@ internal class ProfileViewModel(
         }
     }
 
-    private fun ProfileData.toUiState(oldPosts: List<PresentableSocialPost>) = ProfileUiState(
+    private fun ProfileData.toUiState(
+        oldPosts: List<PresentableSocialPost>,
+        currentUserId: String,
+    ) = ProfileUiState(
         name = name,
         gender = gender,
         photoUrl = photoUrl,
         dateOfBirth = dateOfBirth,
         email = email,
         posts = updateState(oldPosts, posts.toPresentableSocialPost()),
+        showLogout = currentUserId == id || id.isEmpty(),
     )
 
     private fun updateState(

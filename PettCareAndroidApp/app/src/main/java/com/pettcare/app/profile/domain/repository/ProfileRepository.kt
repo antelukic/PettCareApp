@@ -9,4 +9,6 @@ interface ProfileRepository {
     fun results(): Flow<BaseResponse<ProfileData>>
 
     suspend fun getProfileById(page: Int, id: String)
+
+    fun signOut()
 }

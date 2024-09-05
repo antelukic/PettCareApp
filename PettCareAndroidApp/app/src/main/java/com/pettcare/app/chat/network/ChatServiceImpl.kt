@@ -1,5 +1,6 @@
 package com.pettcare.app.chat.network
 
+import com.pettcare.app.BASE_URL
 import com.pettcare.app.chat.network.model.GetChatIdRequestApi
 import com.pettcare.app.chat.network.model.GetChatIdResponseApi
 import com.pettcare.app.chat.network.model.MessageApi
@@ -7,13 +8,10 @@ import com.pettcare.app.chat.network.model.UserChat
 import com.pettcare.app.core.BaseApiResponse
 import com.pettcare.app.sharedprefs.SharedPreferences
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.request.url
 
 class ChatServiceImpl(
     private val client: HttpClient,
@@ -22,39 +20,36 @@ class ChatServiceImpl(
 
     override suspend fun getAllUserChats(id: String): BaseApiResponse<List<UserChat>>? =
         kotlin.runCatching {
-            client.get {
-                url(CHATS)
+            client.get<BaseApiResponse<List<UserChat>>>(BASE_URL + CHATS) {
                 sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
                     header("Authorization", "Bearer $token")
                 }
                 parameter(ID_PARAM, id)
-            }.body() as BaseApiResponse<List<UserChat>>
+            }
         }.onFailure {
             it.printStackTrace()
         }.getOrNull()
 
     override suspend fun getChatId(request: GetChatIdRequestApi): BaseApiResponse<GetChatIdResponseApi>? =
         kotlin.runCatching {
-            client.post {
-                url(CHAT)
-                setBody(request)
+            client.post<BaseApiResponse<GetChatIdResponseApi>>(BASE_URL + CHAT) {
+                body = request
                 sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
                     header("Authorization", "Bearer $token")
                 }
-            }.body() as BaseApiResponse<GetChatIdResponseApi>
+            }
         }.onFailure {
             it.printStackTrace()
         }.getOrNull()
 
     override suspend fun getMessagesByChatID(chatId: String): BaseApiResponse<List<MessageApi>>? =
         kotlin.runCatching {
-            client.get {
-                url(MESSAGES)
+            client.get<BaseApiResponse<List<MessageApi>>>(BASE_URL + MESSAGES) {
                 sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
                     header("Authorization", "Bearer $token")
                 }
                 parameter(CHAT_ID_PARAM, chatId)
-            }.body() as BaseApiResponse<List<MessageApi>>
+            }
         }.onFailure {
             it.printStackTrace()
         }.getOrNull()

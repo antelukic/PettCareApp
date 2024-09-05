@@ -15,7 +15,7 @@ import com.pettcare.app.navigation.Router
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onEach
+import okhttp3.internal.toImmutableList
 
 class ChatViewModel(
     router: Router,
@@ -61,13 +61,15 @@ class ChatViewModel(
                 is BaseResponse.Success -> {
                     launchInMain {
                         sendMessage.messages()
-                            .onEach { message ->
+                            .collectLatest { message ->
                                 if (message is BaseResponse.Success) {
                                     val newList = uiState.value.messages.toMutableList().apply {
                                         add(0, message.data)
                                     }
                                     updateUiState { state ->
-                                        state.copy(messages = newList)
+                                        state.copy(
+                                            messages = newList,
+                                        )
                                     }
                                 }
                             }
@@ -102,8 +104,10 @@ class ChatViewModel(
                 .collectLatest { response ->
                     if (response is BaseResponse.Success) {
                         updateUiState { state ->
+                            val messages = state.messages.toMutableList()
+                            messages.add(0, response.data)
                             state.copy(
-                                messages = emptyList(),
+                                messages = messages.toImmutableList(),
                                 isLoading = false,
                             )
                         }
@@ -116,6 +120,7 @@ class ChatViewModel(
         launchInIO {
             if (messageText.value.isNotBlank()) {
                 sendMessage(messageText.value)
+                _messageText.value = ""
             }
         }
     }

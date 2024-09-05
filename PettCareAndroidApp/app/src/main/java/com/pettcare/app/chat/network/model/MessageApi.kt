@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 data class MessageApi(
     @SerialName("text")
     val text: String,
-    @SerialName("timestamp")
-    val timestamp: Long,
-    @SerialName("username")
-    val username: String,
+    @SerialName("dateTime")
+    val date: String,
+    @SerialName("senderId")
+    val senderId: String,
     @SerialName("id")
     val id: String,
 )

@@ -7,11 +7,10 @@ import com.pettcare.app.chat.network.ChatSocketService
 import com.pettcare.app.chat.network.ChatSocketServiceImpl
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.serialization.kotlinx.json.json
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.Logging
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
@@ -28,17 +27,15 @@ val chatNetworkModule = module {
                 level = LogLevel.ALL
             }
 
-            install(ContentNegotiation) {
-                json(
-                    Json {
-                        prettyPrint = true
-                        isLenient = true
-                    },
-                )
+            install(JsonFeature) {
+                Json {
+                    prettyPrint = true
+                    isLenient = true
+                }
             }
         }
     }
 
-    factory<ChatSocketService> { ChatSocketServiceImpl(get(), get()) }
-    factory<ChatService> { ChatServiceImpl(get(), get()) }
+    single<ChatSocketService> { ChatSocketServiceImpl() }
+    single<ChatService> { ChatServiceImpl(get(), get()) }
 }

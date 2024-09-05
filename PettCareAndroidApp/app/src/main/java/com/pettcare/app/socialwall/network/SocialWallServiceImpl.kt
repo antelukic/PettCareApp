@@ -1,5 +1,6 @@
 package com.pettcare.app.socialwall.network
 
+import com.pettcare.app.BASE_URL
 import com.pettcare.app.core.BaseApiResponse
 import com.pettcare.app.sharedprefs.SharedPreferences
 import com.pettcare.app.socialwall.network.model.AddCommentRequestApi
@@ -8,14 +9,11 @@ import com.pettcare.app.socialwall.network.model.GetCommentsResponseApi
 import com.pettcare.app.socialwall.network.model.LikePostRequestApi
 import com.pettcare.app.socialwall.network.model.SocialWallPostsResponseApi
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.request.url
 
 internal class SocialWallServiceImpl(
     private val client: HttpClient,
@@ -24,45 +22,41 @@ internal class SocialWallServiceImpl(
 
     override suspend fun results(page: Int, userId: String?): BaseApiResponse<SocialWallPostsResponseApi>? =
         kotlin.runCatching {
-            client.get {
-                url(SOCIAL_POSTS)
+            client.get<BaseApiResponse<SocialWallPostsResponseApi>>(BASE_URL + SOCIAL_POSTS) {
                 parameter(PAGE_SIZE_PARAM, PAGE_SIZE)
                 parameter(PAGE_NUMBER_PARAM, page)
                 userId?.let {
                     parameter(USER_ID_PARAM, userId)
                 }
                 authorization(sharedPreferences)
-            }.body() as BaseApiResponse<SocialWallPostsResponseApi>
+            }
         }.onFailure {
             it.printStackTrace()
         }.getOrNull()
 
     override suspend fun likePost(request: LikePostRequestApi): BaseApiResponse<Boolean>? = kotlin.runCatching {
-        client.post {
-            url(LIKE_POST)
+        client.post<BaseApiResponse<Boolean>>(BASE_URL + LIKE_POST) {
             authorization(sharedPreferences)
-            setBody(request)
-        }.body() as BaseApiResponse<Boolean>
+            body = request
+        }
     }.onFailure { it.printStackTrace() }
         .getOrNull()
 
     override suspend fun postComment(request: AddCommentRequestApi): BaseApiResponse<AddCommentResponseApi>? =
         kotlin.runCatching {
-            client.post {
-                url(ADD_COMMENT)
+            client.post<BaseApiResponse<AddCommentResponseApi>>(BASE_URL + ADD_COMMENT) {
                 authorization(sharedPreferences)
-                setBody(request)
-            }.body() as BaseApiResponse<AddCommentResponseApi>
+                body = request
+            }
         }.onFailure { it.printStackTrace() }
             .getOrNull()
 
     override suspend fun getComments(postId: String): BaseApiResponse<GetCommentsResponseApi>? =
         kotlin.runCatching {
-            client.get {
-                url(COMMENTS)
+            client.get<BaseApiResponse<GetCommentsResponseApi>>(BASE_URL + COMMENTS) {
                 authorization(sharedPreferences)
                 parameter(COMMENTS_ID_PARAM, postId)
-            }.body() as BaseApiResponse<GetCommentsResponseApi>
+            }
         }.onFailure { it.printStackTrace() }
             .getOrNull()
 

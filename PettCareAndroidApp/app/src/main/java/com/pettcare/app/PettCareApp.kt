@@ -76,7 +76,7 @@ class PettCareApp : Application() {
                     chatDomainModule,
                     chatDataModule,
                     chatNetworkModule,
-                    networkModule("http://192.168.1.169:8081"),
+                    networkModule(),
                     authNetworkModule,
                     sharedPrefsModule,
                 ),
@@ -84,3 +84,5 @@ class PettCareApp : Application() {
         }
     }
 }
+
+const val BASE_URL = "https://literate-waddle-vw4p69gqrqqfxw7w-8081.app.github.dev"

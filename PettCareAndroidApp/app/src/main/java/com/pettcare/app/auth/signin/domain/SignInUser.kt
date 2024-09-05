@@ -17,6 +17,6 @@ class SignInUser(
     private fun mapSignInResponse(data: BaseResponse<Boolean>): SignInData = when (data) {
         is BaseResponse.Loading -> SignInData(isSuccess = false, errorType = null, isLoading = true)
         is BaseResponse.Error -> SignInData(isSuccess = false, errorType = data, isLoading = false)
-        is BaseResponse.Success -> SignInData(isSuccess = true, errorType = null, isLoading = false)
+        is BaseResponse.Success -> SignInData(isSuccess = data.data, errorType = null, isLoading = false)
     }
 }

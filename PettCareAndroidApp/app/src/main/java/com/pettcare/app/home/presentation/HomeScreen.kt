@@ -17,13 +17,17 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.gms.maps.model.LatLng
 import com.pettcare.app.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -42,6 +46,10 @@ fun HomeScreen(
         PAGE_COUNT
     }
     val coroutineScope = rememberCoroutineScope()
+    val resolvedLocation = remember { mutableStateOf<LatLng?>(null) }
+    RequestLocationPermission { latLng ->
+        resolvedLocation.value = latLng
+    }
     HorizontalPager(
         state = pagerState,
         userScrollEnabled = false,
@@ -56,13 +64,16 @@ fun HomeScreen(
                 )
             } else {
                 MapScreen(
+                    onUserClicked = viewModel::onProfileClicked,
                     modifier = Modifier.fillMaxSize(),
                     carePosts = uiState.markers,
+                    resolvedLocation = resolvedLocation.value ?: LatLng(0.0, 0.0),
                 )
             }
             ToggleButton(
                 pagerState = pagerState,
                 coroutineScope = coroutineScope,
+                isEnabled = hasLocationPermission(LocalContext.current) || resolvedLocation.value != null,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(dimensionResource(id = R.dimen.spacing_4)),
@@ -74,6 +85,7 @@ fun HomeScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToggleButton(
+    isEnabled: Boolean,
     pagerState: PagerState,
     coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier,
@@ -81,6 +93,7 @@ fun ToggleButton(
     Button(
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onBackground),
         onClick = { pagerState.toggle(coroutineScope) },
+        enabled = isEnabled,
         modifier = modifier,
     ) {
         Image(

@@ -7,6 +7,7 @@ import com.pettcare.app.chat.network.ChatService
 import com.pettcare.app.chat.network.ChatSocketService
 import com.pettcare.app.chat.network.model.GetChatIdRequestApi
 import com.pettcare.app.chat.network.model.InitSessionRequestApi
+import com.pettcare.app.chat.network.model.MessageApi
 import com.pettcare.app.chat.network.model.UserChat
 import com.pettcare.app.core.BaseResponse
 import com.pettcare.app.home.network.response.UserResponseApi
@@ -30,14 +31,23 @@ internal class ChatRepositoryImpl(
 
     private val queryOrIdPublisher = MutableSharedFlow<String>(replay = 1)
     private val idPublisher = MutableSharedFlow<String>(replay = 1)
+    private var senderIdCache = mutableMapOf<String, ProfileData>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun getMessages(): Flow<BaseResponse<Message>> = chatSocketService.observeMessages()
-        .mapLatest {
-            if (it == null) {
+        .mapLatest { message ->
+            if (message == null) {
                 BaseResponse.Error.Network
             } else {
-                BaseResponse.Success(it.toMessage())
+                val cachedUser = senderIdCache[message.senderId]
+                if (cachedUser == null) {
+                    senderIdCache[message.senderId] =
+                        userService.getUserById(message.senderId)?.data?.toProfileData()
+                            ?: return@mapLatest BaseResponse.Error.Network
+                }
+                cachedUser?.let {
+                    BaseResponse.Success(message.toMessage(cachedUser.name))
+                } ?: BaseResponse.Error.Network
             }
         }
 
@@ -61,7 +71,7 @@ internal class ChatRepositoryImpl(
             ?: return BaseResponse.Error.Other
         return chatSocketService.initSession(
             InitSessionRequestApi(
-                senderId = userId,
+                senderId = currentUserId,
                 text = "",
                 chatId = chatId.data?.id.orEmpty(),
             ),
@@ -129,8 +139,16 @@ internal class ChatRepositoryImpl(
             ?: return BaseResponse.Error.Other
         val chatId = chatService.getChatId(GetChatIdRequestApi(currentUserId, receiverId))?.data?.id
             ?: return BaseResponse.Error.Network
-        val messages = chatService.getMessagesByChatID(chatId)?.data?.map { it.toMessage() }
+        val messages = chatService.getMessagesByChatID(chatId)?.data?.getMessages()
             ?: return BaseResponse.Error.Network
-        return BaseResponse.Success(messages)
+        return BaseResponse.Success(messages.sortedByDescending { it.dateTime })
+    }
+
+    private suspend fun List<MessageApi>.getMessages(): List<Message> = mapNotNull { message ->
+        val cachedUser = senderIdCache[message.senderId]
+            ?: userService.getUserById(message.senderId)?.data?.toProfileData()
+            ?: return@mapNotNull null
+
+        message.toMessage(cachedUser.name)
     }
 }

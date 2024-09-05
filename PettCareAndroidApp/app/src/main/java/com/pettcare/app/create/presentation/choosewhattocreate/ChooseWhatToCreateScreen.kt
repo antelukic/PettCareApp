@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Notes
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.pettcare.app.R
@@ -54,6 +56,7 @@ private fun ChooseWhatToCreateScreen(
         CreatePostInput(
             title = stringResource(id = R.string.create_social_post_label_title),
             subtitle = stringResource(id = R.string.create_social_post_label_subtitle),
+            icon = Icons.AutoMirrored.Outlined.Notes,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(id = R.dimen.spacing_4))
@@ -69,6 +72,7 @@ private fun ChooseWhatToCreateScreen(
         CreatePostInput(
             title = stringResource(id = R.string.create_care_post_label_title),
             subtitle = stringResource(id = R.string.create_care_post_label_subtitle),
+            icon = Icons.Outlined.Home,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(id = R.dimen.spacing_4))
@@ -83,6 +87,7 @@ private fun ChooseWhatToCreateScreen(
 private fun CreatePostInput(
     title: String,
     subtitle: String,
+    icon: ImageVector,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -90,7 +95,7 @@ private fun CreatePostInput(
         modifier = modifier,
     ) {
         Icon(
-            imageVector = Icons.Outlined.Home,
+            imageVector = icon,
             contentDescription = null,
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.icon_size_big))

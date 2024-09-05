@@ -12,6 +12,8 @@ val profilePresentationModule = module {
             postComment = get(),
             id = parameters.get(),
             router = get(),
+            signOut = get(),
+            sharedPreferences = get(),
         )
     }
 }

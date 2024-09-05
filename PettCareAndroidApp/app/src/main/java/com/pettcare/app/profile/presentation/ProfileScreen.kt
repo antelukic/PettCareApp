@@ -1,15 +1,22 @@
 package com.pettcare.app.profile.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +47,7 @@ fun ProfileScreen(
         onDismissComments = viewModel::dismissComments,
         onCommentTextChanged = viewModel::updateComment,
         loadMore = viewModel::nextPage,
+        onSignOut = viewModel::signOut,
         modifier = modifier.padding(dimensionResource(id = R.dimen.spacing_4)),
     )
 }
@@ -53,44 +61,59 @@ private fun ProfileScreen(
     onDismissComments: () -> Unit,
     onCommentTextChanged: (String) -> Unit,
     loadMore: () -> Unit,
+    onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        ProfileAvatar(
-            name = uiState.name,
-            photoUrl = uiState.photoUrl,
-            modifier = Modifier.fillMaxWidth(),
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        AnimatedVisibility(
+            visible = uiState.showLogout,
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.spacing_2))
+                .align(Alignment.TopEnd),
+        ) {
+            IconButton(
+                onClick = onSignOut,
+            ) {
+                Icon(imageVector = Icons.AutoMirrored.Outlined.Logout, contentDescription = null)
+            }
+        }
+        Column(modifier = modifier) {
+            ProfileAvatar(
+                name = uiState.name,
+                photoUrl = uiState.photoUrl,
+                modifier = Modifier.fillMaxWidth(),
+            )
 
-        HorizontalDivider(
-            thickness = dimensionResource(id = R.dimen.divider_thickness),
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+            HorizontalDivider(
+                thickness = dimensionResource(id = R.dimen.divider_thickness),
+                color = MaterialTheme.colorScheme.onBackground,
+            )
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacing_2)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacing_2)))
 
-        ProfileInformation(email = uiState.email, gender = uiState.gender, dateOfBirth = uiState.dateOfBirth)
+            ProfileInformation(email = uiState.email, gender = uiState.gender, dateOfBirth = uiState.dateOfBirth)
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacing_2)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacing_2)))
 
-        HorizontalDivider(
-            thickness = dimensionResource(id = R.dimen.divider_thickness),
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+            HorizontalDivider(
+                thickness = dimensionResource(id = R.dimen.divider_thickness),
+                color = MaterialTheme.colorScheme.onBackground,
+            )
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacing_2)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacing_2)))
 
-        SocialWallScreen(
-            uiState = SocialWallUIState(uiState.posts, uiState.comments, uiState.comment),
-            onDismiss = onDismissComments,
-            onProfileClick = {},
-            onLikeClick = onLikePost,
-            onCommentsClick = onShowComments,
-            onUpdateComment = onCommentTextChanged,
-            onPostComment = onPostComment,
-            loadMore = loadMore,
-            title = stringResource(id = R.string.social_wall_title_profile),
-        )
+            SocialWallScreen(
+                uiState = SocialWallUIState(uiState.posts, uiState.comments, uiState.comment),
+                onDismiss = onDismissComments,
+                onProfileClick = {},
+                onLikeClick = onLikePost,
+                onCommentsClick = onShowComments,
+                onUpdateComment = onCommentTextChanged,
+                onPostComment = onPostComment,
+                loadMore = loadMore,
+                title = stringResource(id = R.string.social_wall_title_profile),
+            )
+        }
     }
 }
 
