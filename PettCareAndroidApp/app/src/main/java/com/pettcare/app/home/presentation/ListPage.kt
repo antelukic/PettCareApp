@@ -143,13 +143,15 @@ fun CarePostProfile(
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_2)))
 
-            AsyncImage(
-                model = postImageUrl,
-                contentDescription = "Care post image",
-                modifier = Modifier
-                    .height(dimensionResource(id = R.dimen.care_post_image_height))
-                    .fillMaxWidth(),
-            )
+            postImageUrl?.let {
+                AsyncImage(
+                    model = postImageUrl,
+                    contentDescription = "Care post image",
+                    modifier = Modifier
+                        .height(dimensionResource(id = R.dimen.care_post_image_height))
+                        .fillMaxWidth(),
+                )
+            }
         }
     }
 }

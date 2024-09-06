@@ -64,10 +64,10 @@ class HomeViewModel(
 
     private fun List<CarePost>.toMapMarkers() = map {
         MapsMarkerCluster(
-            id = it.id,
+            id = it.creatorId,
             itemPosition = it.location,
             itemTitle = it.name,
-            itemSnippet = it.price.orEmpty(),
+            itemSnippet = "$ ${it.price.orEmpty()}",
             itemZIndex = 0f,
             itemImage = it.photoUrl,
         )

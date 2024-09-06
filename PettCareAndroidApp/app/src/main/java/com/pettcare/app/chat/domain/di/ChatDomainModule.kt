@@ -10,11 +10,11 @@ import com.pettcare.app.chat.domain.usecase.SendMessage
 import org.koin.dsl.module
 
 val chatDomainModule = module {
-    factory { GetAllMessages(get()) }
-    factory { SendMessage(get()) }
-    factory { CloseSession(get()) }
-    factory { InitSession(get()) }
-    factory { GetUserChats(get()) }
-    factory { GetAllChatMessages(get()) }
-    factory { GetUserInfo(get()) }
+    single { GetAllMessages(get()) }
+    single { SendMessage(get()) }
+    single { CloseSession(get()) }
+    single { InitSession(get()) }
+    single { GetUserChats(get()) }
+    single { GetAllChatMessages(get()) }
+    single { GetUserInfo(get()) }
 }

@@ -91,7 +91,7 @@ class AuthenticationRepositoryImpl(
         val response = authService.signIn(params.toApi())
         return if (response != null) {
             storeUserInfo(response.data?.id, response.data?.authToken)
-            BaseResponse.Success(true)
+            BaseResponse.Success(response.data != null)
         } else {
             BaseResponse.Error.Network
         }

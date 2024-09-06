@@ -1,3 +1,5 @@
+@file:Suppress("ImportOrdering", "ktlint:import-ordering")
+
 package com.pettcare.app.auth.signin.presentation
 
 import android.net.Uri
@@ -29,6 +31,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -51,6 +54,7 @@ import com.pettcare.app.uicomponents.PettCareInputField
 import com.pettcare.app.uicomponents.PettCareProceedButton
 import com.pettcare.app.uicomponents.PhotoPicker
 import com.pettcare.app.uicomponents.SpinningProgressBar
+import java.time.LocalDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -240,6 +244,17 @@ private fun GenderPicker(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+object PastOrPresentSelectableDates : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+        return utcTimeMillis <= System.currentTimeMillis()
+    }
+
+    override fun isSelectableYear(year: Int): Boolean {
+        return year <= LocalDate.now().year
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DatePicker(
     datePickerConfirmButtonTxt: String,
@@ -248,7 +263,9 @@ private fun DatePicker(
     onAgeSelected: (Long?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        selectableDates = PastOrPresentSelectableDates,
+    )
 
     AnimatedVisibility(
         visible = isDatePickerVisible,

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class CarePostResponseApi(
     @SerialName("id")
     val id: String,
-    @SerialName("photoUrl")
+    @SerialName("photoId")
     val photoUrl: String?,
     @SerialName("price")
     val price: String?,

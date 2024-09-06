@@ -75,6 +75,11 @@ internal class ProfileRepositoryImpl(
         idWithPagePublisher.emit(page to id)
     }
 
+    override fun signOut() {
+        sharedPreferences.storeString(SharedPreferences.ID_KEY, "")
+        sharedPreferences.storeString(SharedPreferences.TOKEN_KEY, "")
+    }
+
     private suspend fun getProfileInformation(id: String): BaseResponse<UserResponseApi> =
         userService.getUserById(id)?.data?.let { response ->
             BaseResponse.Success(response)

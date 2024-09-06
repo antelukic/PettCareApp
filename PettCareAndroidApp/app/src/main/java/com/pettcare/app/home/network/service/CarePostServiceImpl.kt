@@ -1,14 +1,13 @@
 package com.pettcare.app.home.network.service
 
+import com.pettcare.app.BASE_URL
 import com.pettcare.app.core.BaseApiResponse
 import com.pettcare.app.home.network.response.CarePostsResponseApi
 import com.pettcare.app.sharedprefs.SharedPreferences
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
-import io.ktor.client.request.url
 
 internal class CarePostServiceImpl(
     private val client: HttpClient,
@@ -17,8 +16,7 @@ internal class CarePostServiceImpl(
 
     override suspend fun carePosts(page: String, userId: String?): BaseApiResponse<CarePostsResponseApi>? =
         kotlin.runCatching {
-            client.get {
-                url(CARE_POSTS)
+            client.get<BaseApiResponse<CarePostsResponseApi>?>(BASE_URL + CARE_POSTS) {
                 parameter(PAGE_SIZE_PARAMETER, PAGE_SIZE)
                 parameter(PAGE_NUMBER_PARAMETER, page)
                 userId?.let {
@@ -27,7 +25,7 @@ internal class CarePostServiceImpl(
                 sharedPreferences.getString(SharedPreferences.TOKEN_KEY, null)?.let { token ->
                     header("Authorization", "Bearer $token")
                 }
-            }.body() as BaseApiResponse<CarePostsResponseApi>?
+            }
         }.onFailure {
             it.printStackTrace()
         }.getOrNull()

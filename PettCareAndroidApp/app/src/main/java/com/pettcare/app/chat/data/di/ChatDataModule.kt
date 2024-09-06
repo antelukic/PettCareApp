@@ -5,5 +5,5 @@ import com.pettcare.app.chat.domain.repository.ChatRepository
 import org.koin.dsl.module
 
 val chatDataModule = module {
-    factory<ChatRepository> { ChatRepositoryImpl(get(), get(), get(), get()) }
+    single<ChatRepository> { ChatRepositoryImpl(get(), get(), get(), get()) }
 }

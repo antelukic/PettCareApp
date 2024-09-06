@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
+import com.pettcare.app.R
 
 @Composable
 fun RequestLocationPermission(
@@ -42,12 +43,13 @@ fun RequestLocationPermission(
                 onLocationResolved(LatLng(lat, long))
             }
         } else {
+            Toast.makeText(context, context.getString(R.string.no_location_permission), Toast.LENGTH_SHORT).show()
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 }
 
-private fun hasLocationPermission(context: Context): Boolean = ContextCompat.checkSelfPermission(
+fun hasLocationPermission(context: Context): Boolean = ContextCompat.checkSelfPermission(
     context,
     Manifest.permission.ACCESS_FINE_LOCATION,
 ) == PackageManager.PERMISSION_GRANTED

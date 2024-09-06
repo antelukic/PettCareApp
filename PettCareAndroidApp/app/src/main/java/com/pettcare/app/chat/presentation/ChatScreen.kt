@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -148,16 +149,19 @@ private fun Message(
         Text(
             text = message.username,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyMedium,
         )
         Text(
             text = message.text,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyLarge,
         )
         Text(
             text = message.formattedTime,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.align(Alignment.End),
+            style = MaterialTheme.typography.bodySmall,
         )
     }
 }
@@ -189,7 +193,11 @@ fun messageModifier(isOwnMessage: Boolean) = Modifier.composed {
         )
     }
     background(
-        color = if (isOwnMessage) Color.Green else Color.DarkGray,
+        color = if (isOwnMessage) {
+            MaterialTheme.colorScheme.onPrimaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSecondaryContainer
+        },
         shape = RoundedCornerShape(10.dp),
     )
     padding(dimensionResource(id = R.dimen.spacing_2))
